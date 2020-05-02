@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_today"
+        android:icon="@android:drawable/ic_menu_today"
+        android:title="@string/title_today"/>
+
+    <item
+        android:id="@+id/navigation_calendar"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:title="@string/title_calendar"/>
+
+    <item
+        android:id="@+id/navigation_planner"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/title_planner"/>
+</menu>
