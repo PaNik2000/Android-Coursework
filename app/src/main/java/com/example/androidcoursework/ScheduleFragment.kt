@@ -39,7 +39,7 @@ class ScheduleFragment : Fragment() {
             scheduleList.add("10:40 - 12:10")
             scheduleList.add("13:10 - 14:40")
             scheduleList.add("14:50 - 16:20")
-            scheduleList.add("16:30 - 18:00")
+            scheduleList.add("4:20 - 69")
         }
 
         listView.adapter = ScheduleListAdapter(activity as Context, R.layout.schedule_list_element, scheduleList)
