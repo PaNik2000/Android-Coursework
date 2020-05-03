@@ -34,11 +34,13 @@ class ScheduleFragment : Fragment() {
 
         val listView = view.findViewById(R.id.scheduleList) as ListView
 
-        scheduleList.add("9:00 - 10:30")
-        scheduleList.add("10:40 - 12:10")
-        scheduleList.add("13:10 - 14:40")
-        scheduleList.add("14:50 - 16:20")
-        scheduleList.add("16:30 - 18:00")
+        if (scheduleList.isEmpty()) {
+            scheduleList.add("9:00 - 10:30")
+            scheduleList.add("10:40 - 12:10")
+            scheduleList.add("13:10 - 14:40")
+            scheduleList.add("14:50 - 16:20")
+            scheduleList.add("16:30 - 18:00")
+        }
 
         listView.adapter = ScheduleListAdapter(activity as Context, R.layout.schedule_list_element, scheduleList)
         listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
