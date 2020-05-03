@@ -9,21 +9,25 @@ import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
 
+    private val todayFragment = TodayFragment()
+    private val calendarFragment = CalendarFragment()
+    private val plannerFragment = PlannerFragment()
+
     private val mNavigationListener =
         object : BottomNavigationView.OnNavigationItemSelectedListener {
 
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when (item.getItemId()) {
                     R.id.navigation_today -> {
-                        loadFragment(TodayFragment())
+                        loadFragment(todayFragment)
                         return true
                     }
                     R.id.navigation_calendar -> {
-                        loadFragment(CalendarFragment())
+                        loadFragment(calendarFragment)
                         return true
                     }
                     R.id.navigation_planner -> {
-                        loadFragment(PlannerFragment())
+                        loadFragment(plannerFragment)
                         return true
                     }
                 }
