@@ -10,20 +10,24 @@ import androidx.fragment.app.FragmentPagerAdapter
 class MyPageAdapter(fm: FragmentManager) :
     FragmentPagerAdapter(fm) {
 
+    private val scheduleFragment = ScheduleFragment()
+    private val termFragment = TermFragment()
+    private val teacherFragment = TeacherFragment()
+
     override fun getItem(position: Int): Fragment {
         val fragment : Fragment
         when (position) {
             0 -> {
-                fragment = ScheduleFragment()
+                fragment = scheduleFragment
             }
             1 -> {
-                fragment = TermFragment()
+                fragment = termFragment
             }
             2 -> {
-                fragment = TeacherFragment()
+                fragment = teacherFragment
             }
             else -> {
-                fragment = TermFragment()
+                fragment = termFragment
             }
         }
 
