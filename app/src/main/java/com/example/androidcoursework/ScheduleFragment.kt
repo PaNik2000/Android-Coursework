@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_schedule.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -45,6 +46,12 @@ class ScheduleFragment : Fragment() {
         listView.adapter = ScheduleListAdapter(activity as Context, R.layout.schedule_list_element, scheduleList)
         listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
+                //TODO intent
+            }
+        })
+
+        (view.findViewById(R.id.addScheduleButton) as FloatingActionButton).setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
                 //TODO intent
             }
         })

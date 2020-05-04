@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class TeacherFragment : Fragment() {
 
@@ -40,6 +41,12 @@ class TeacherFragment : Fragment() {
         listView.adapter = TeacherListAdapter(activity as Context, R.layout.teacher_list_element, teacherList)
         listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
+                //TODO intent
+            }
+        })
+
+        (view.findViewById(R.id.addTeacherButton) as FloatingActionButton).setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
                 //TODO intent
             }
         })
