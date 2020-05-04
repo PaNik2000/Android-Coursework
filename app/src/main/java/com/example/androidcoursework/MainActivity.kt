@@ -19,10 +19,12 @@ class MainActivity : AppCompatActivity() {
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when (item.getItemId()) {
                     R.id.navigation_today -> {
+                        plannerFragment.removeFragments()
                         loadFragment(todayFragment)
                         return true
                     }
                     R.id.navigation_calendar -> {
+                        plannerFragment.removeFragments()
                         loadFragment(calendarFragment)
                         return true
                     }

@@ -10,6 +10,8 @@ import androidx.viewpager.widget.ViewPager
 
 class PlannerFragment : Fragment() {
 
+    lateinit var myAdapter : MyPageAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -20,11 +22,15 @@ class PlannerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_planner, container, false)
-        val myAdapter = MyPageAdapter(requireActivity().supportFragmentManager)
+        myAdapter = MyPageAdapter(requireActivity().supportFragmentManager)
         (view.findViewById(R.id.viewPager) as ViewPager).adapter = myAdapter
         (view.findViewById(R.id.viewPager) as ViewPager).currentItem = 1
         Log.d("abc", "planner fragment")
         return view
+    }
+
+    fun removeFragments() {
+        myAdapter.removeFragments()
     }
 
 }

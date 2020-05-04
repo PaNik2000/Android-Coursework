@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 
 //TODO Исправить ошибку с отображением в ViewPager
 
-class MyPageAdapter(fm: FragmentManager) :
+class MyPageAdapter(val fm: FragmentManager) :
     FragmentPagerAdapter(fm) {
 
     private val scheduleFragment = ScheduleFragment()
@@ -38,5 +38,12 @@ class MyPageAdapter(fm: FragmentManager) :
 
     override fun getCount(): Int {
         return 3
+    }
+
+    fun removeFragments() {
+        fm.beginTransaction().remove(scheduleFragment)
+            .remove(termFragment)
+            .remove(teacherFragment)
+            .commit()
     }
 }
