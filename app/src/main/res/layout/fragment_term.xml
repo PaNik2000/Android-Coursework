@@ -18,6 +18,7 @@
         android:layout_margin="16dp"
         android:layout_gravity="bottom|end"
         android:clickable="true"
-        android:focusable="true"/>
+        android:focusable="true"
+        android:onClick="onAddTermButtonClick"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
