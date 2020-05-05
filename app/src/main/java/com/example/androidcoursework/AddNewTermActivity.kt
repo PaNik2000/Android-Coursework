@@ -33,12 +33,10 @@ class AddNewTermActivity : AppCompatActivity() {
         curDate = addMonthToDate(curDate, 3)
         mEndDate.text = dateFormat.format(curDate)
 
-        toolbar = findViewById<Toolbar>(R.id.toolBar)
+        toolbar = findViewById<Toolbar>(R.id.termToolBar)
         setSupportActionBar(toolbar)
-        toolbar.title = "Add new term"
-        //Не уверен, что это сработает (делает кнопку назад видимой)
+        toolbar.title = "Add new term" //ЭТА ХЕРАБОТА НЕ РАБОТАЕТ
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
-//        toolbar.navigationIcon = //Иконка Конпки назад
 
     }
 
@@ -62,7 +60,6 @@ class AddNewTermActivity : AppCompatActivity() {
                 Toast.makeText(this, "Why we still here?", Toast.LENGTH_SHORT).show()
                 finish()
             }
-            else -> return super.onOptionsItemSelected(item)
         }
         return super.onOptionsItemSelected(item)
     }

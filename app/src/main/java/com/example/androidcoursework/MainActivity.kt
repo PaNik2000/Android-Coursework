@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onAddTermButtonClick(view: View){
-//        val intent = Intent(this, AddNewTermActivity::class.java)
-//        startActivity(intent)
+        val intent = Intent(this, AddNewTermActivity::class.java)
+        startActivity(intent)
     }
 }
