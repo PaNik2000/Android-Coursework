@@ -1,9 +1,11 @@
 package com.example.androidcoursework
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 
 
@@ -50,5 +52,10 @@ class MainActivity : AppCompatActivity() {
         val navigation : BottomNavigationView = findViewById(R.id.navigation)
         navigation.setOnNavigationItemSelectedListener(mNavigationListener)
         navigation.selectedItemId = R.id.navigation_planner
+    }
+
+    fun onAddTermButtonClick(view: View){
+        val intent = Intent(this, AddNewTermActivity::class.java)
+        startActivity(intent)
     }
 }

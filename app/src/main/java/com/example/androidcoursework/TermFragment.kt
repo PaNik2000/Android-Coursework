@@ -1,6 +1,7 @@
 package com.example.androidcoursework
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -51,6 +52,8 @@ class TermFragment : Fragment() {
         listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
                 //TODO intent
+                val intent = Intent(activity, SubjectsInTermActivity::class.java)
+                startActivity(intent)
             }
         })
 
