@@ -6,9 +6,11 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.thebluealliance.spectrum.SpectrumPalette
+import kotlinx.android.synthetic.main.activity_add_new_term.*
 
 class AddNewSubjectActivity : AppCompatActivity() {
 
@@ -34,7 +36,14 @@ class AddNewSubjectActivity : AppCompatActivity() {
         toolbar = findViewById<Toolbar>(R.id.addSubjToolBar)
         setSupportActionBar(toolbar)
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "New subject"
+        if(intent.getStringExtra("Create or change") == "create"){
+            supportActionBar?.title = "New subject"
+        } else if(intent.getStringExtra("Create or change") == "change"){
+            supportActionBar?.title = "Subject"
+            val textView = findViewById(R.id.newSubjectName) as TextView
+            textView.text = "SUBJ_NAME"
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

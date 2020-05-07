@@ -49,11 +49,10 @@ class SubjectsInTermActivity : AppCompatActivity() {
         val subjectsList = findViewById(R.id.subjectsList) as ListView
 
         //НА ЭТО Я КСТА ПОТРАТИЛ 3 ЧАСА))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-        val resource = resources
-        val drawable1 = resource.getDrawable(R.drawable.light_blue)
-        val drawable2 = resource.getDrawable(R.drawable.blue)
-        val drawable3 = resource.getDrawable(R.drawable.yellow)
-        val drawable4 = resource.getDrawable(R.drawable.light_yellow)
+        val drawable1 = resources.getDrawable(R.drawable.light_blue)
+        val drawable2 = resources.getDrawable(R.drawable.blue)
+        val drawable3 = resources.getDrawable(R.drawable.yellow)
+        val drawable4 = resources.getDrawable(R.drawable.light_yellow)
 
         //Тут нужно будет наполнить subjList предметами из БД
         subjArray.add(SubjectInfo(drawable1, "МБП"))
@@ -66,6 +65,8 @@ class SubjectsInTermActivity : AppCompatActivity() {
         subjectsList.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
                 //TODO intent
+                val intentToClass = Intent(this@SubjectsInTermActivity, ClassesInSubjectActivity::class.java)
+                startActivity(intentToClass)
             }
         })
     }
@@ -96,7 +97,8 @@ class SubjectsInTermActivity : AppCompatActivity() {
 
     fun onAddSubjectButtonClick(view: View){
         //Переходим к добавлению нового subject'a
-        val intentToSubAdd = Intent(this, AddNewSubjectActivity::class.java)
-        startActivity(intentToSubAdd)
+        val intentToSubjAdd = Intent(this, AddNewSubjectActivity::class.java)
+        intentToSubjAdd.putExtra("Create or change", "create")
+        startActivity(intentToSubjAdd)
     }
 }

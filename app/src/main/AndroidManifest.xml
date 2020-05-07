@@ -9,11 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        <activity android:name=".AddNewSubjectActivity"></activity>
-        <activity
-            android:name=".SubjectsInTermActivity"/>
-        <activity
-            android:name=".AddNewTermActivity"/>
+        <activity android:name=".ClassesInSubjectActivity"></activity>
+        <activity android:name=".AddNewSubjectActivity" />
+        <activity android:name=".SubjectsInTermActivity" />
+        <activity android:name=".AddNewTermActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
