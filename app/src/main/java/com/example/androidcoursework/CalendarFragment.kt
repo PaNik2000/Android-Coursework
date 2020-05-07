@@ -10,17 +10,21 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import java.util.*
+import kotlin.Comparator
 import kotlin.collections.ArrayList
 
 // TODO Использовать класс для занятий из другого активити
 class TempClass(val id : Int, val subjectId : Int, val type : String, val position : Int,
                 val startDate : Calendar, val endDate : Calendar, val weekDay : Int, val repeatType : Int,
-                val repeatFreq : Int, val teacherId : Int) : Comparable<TempClass> {
-    override fun compareTo(other: TempClass): Int {
-        if (this.position < other.position) return -1
-        if (this.position > other.position) return 1
+                val repeatFreq : Int, val teacherId : Int)
+
+class TimeClassComparator() : Comparator<TempClass> {
+    override fun compare(o1: TempClass?, o2: TempClass?): Int {
+        if (o1!!.position < o2!!.position) return -1
+        if (o1.position > o2.position) return 1
         return 0
     }
+
 }
 
 class CalendarFragment : Fragment() {
@@ -111,7 +115,7 @@ class CalendarFragment : Fragment() {
                     }
                 }
 
-                currentClasses.sort()
+                currentClasses.sortWith(TimeClassComparator())
                 adapter.notifyDataSetChanged()
             }
         })
@@ -170,7 +174,7 @@ class CalendarFragment : Fragment() {
             }
         }
 
-        currentClasses.sort()
+        currentClasses.sortWith(TimeClassComparator())
         adapter.notifyDataSetChanged()
     }
 
