@@ -11,26 +11,29 @@
         android:id="@+id/subjToolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorToolbar"
         android:minHeight="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addSubjectButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="onAddSubjectButtonClick"/>
+        android:onClick="onAddSubjectButtonClick"
+        app:backgroundTint="#E91E63" />
 
     <ListView
         android:id="@+id/subjectsList"
         android:layout_marginTop="56dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

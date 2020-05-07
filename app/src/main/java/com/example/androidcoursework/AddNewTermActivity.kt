@@ -2,6 +2,7 @@ package com.example.androidcoursework
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -35,14 +36,23 @@ class AddNewTermActivity : AppCompatActivity() {
 
         toolbar = findViewById<Toolbar>(R.id.termToolBar)
         setSupportActionBar(toolbar)
-        toolbar.title = "Add new term" //ЭТА ХЕРАБОТА НЕ РАБОТАЕТ
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
+        Log.d("qqq", intent.getStringExtra("Create or change"))
+        if(intent.getStringExtra("Create or change") == "create") {
+            Log.d("qqq", "yes")
+            supportActionBar?.title = "New term"
+        } else if(intent.getStringExtra("Create or change") == "change") {
+            supportActionBar?.title = "Term" // Взять имя из БД
+            val textView = findViewById(R.id.termName) as TextView;
+            textView.text = "TERM_NAME"
+            Log.d("qqq", "no")
+        }
 
     }
 
     //Показываем содержимое меню на тулбаре (показываем кнопку "ADD")
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        getMenuInflater().inflate(R.menu.menu_add_term, menu)
+        getMenuInflater().inflate(R.menu.menu_add, menu)
         return true
     }
 

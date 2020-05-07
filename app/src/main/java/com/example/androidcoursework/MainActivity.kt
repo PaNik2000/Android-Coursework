@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
 
     fun onAddTermButtonClick(view: View){
         val intent = Intent(this, AddNewTermActivity::class.java)
+        intent.putExtra("Create or change", "create")
         startActivity(intent)
     }
 }

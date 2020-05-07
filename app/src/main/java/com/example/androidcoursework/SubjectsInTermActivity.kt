@@ -43,7 +43,7 @@ class SubjectsInTermActivity : AppCompatActivity() {
 
         toolbar = findViewById<Toolbar>(R.id.subjToolBar)
         setSupportActionBar(toolbar)
-        toolbar.title = "NAME_OF_TERM" //Взять с БД название семестра (не работаит)
+        supportActionBar?.title = "NAME_OF_TERM" //Взять с БД название семестра
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
         val subjectsList = findViewById(R.id.subjectsList) as ListView
@@ -80,6 +80,7 @@ class SubjectsInTermActivity : AppCompatActivity() {
             R.id.changeTerm -> {
                 //Открываем addNewTermActivity, чтобы настроить/изменить его
                 val intentToANTA = Intent(this, AddNewTermActivity::class.java)
+                intentToANTA.putExtra("Create or change", "change")
                 startActivity(intentToANTA)
             }
             R.id.deleteTerm->{
@@ -91,9 +92,8 @@ class SubjectsInTermActivity : AppCompatActivity() {
     }
 
     fun onAddSubjectButtonClick(view: View){
-        Toast.makeText(this, "Ну и зачем нажал, не видишь, ничего еще нет...", Toast.LENGTH_SHORT).show()
         //Переходим к добавлению нового subject'a
-        //val intentToSubAdd = Intent(this, AddNewSubjectActivity)
-        //startintent(intentToSubAdd)
+        val intentToSubAdd = Intent(this, AddNewSubjectActivity::class.java)
+        startActivity(intentToSubAdd)
     }
 }
