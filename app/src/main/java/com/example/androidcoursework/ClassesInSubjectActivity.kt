@@ -93,7 +93,7 @@ class ClassesInSubjectActivity : AppCompatActivity() {
 
     fun onAddClassButtonClick(view: View){
         //Переходим к добавлению нового class'a
-//        val intentToSubAdd = Intent(this, AddNewSubjectActivity::class.java)
-//        startActivity(intentToSubAdd)
+        val intentToSubAdd = Intent(this, AddNewClassActivity::class.java)
+        startActivity(intentToSubAdd)
     }
 }

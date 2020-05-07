@@ -35,6 +35,7 @@
         android:layout_marginTop="8dp"
         android:textSize="25dp"
         android:inputType="date"
+        android:textColor="#000000"
         android:onClick="onStartDateClick"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -56,6 +57,7 @@
         android:layout_marginTop="8dp"
         android:textSize="25dp"
         android:inputType="date"
+        android:textColor="#000000"
         android:onClick="onEndDateClick"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />

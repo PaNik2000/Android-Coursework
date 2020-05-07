@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        <activity android:name=".ClassesInSubjectActivity"></activity>
+        <activity android:name=".AddNewClassActivity"></activity>
+        <activity android:name=".ClassesInSubjectActivity" />
         <activity android:name=".AddNewSubjectActivity" />
         <activity android:name=".SubjectsInTermActivity" />
         <activity android:name=".AddNewTermActivity" />
