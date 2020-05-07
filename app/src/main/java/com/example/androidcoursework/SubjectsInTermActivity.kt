@@ -87,6 +87,9 @@ class SubjectsInTermActivity : AppCompatActivity() {
                 //Удаляем term из БД и возвращаемся в планер
                 finish()
             }
+            android.R.id.home ->{
+                finish()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

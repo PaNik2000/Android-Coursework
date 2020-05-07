@@ -11,11 +11,9 @@
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
         <activity android:name=".AddNewSubjectActivity"></activity>
         <activity
-            android:name=".SubjectsInTermActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".SubjectsInTermActivity"/>
         <activity
-            android:name=".AddNewTermActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".AddNewTermActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

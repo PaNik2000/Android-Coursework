@@ -54,7 +54,11 @@ class AddNewSubjectActivity : AppCompatActivity() {
                 Toast.makeText(this, "Еще одна пара по МБП...", Toast.LENGTH_SHORT).show()
                 finish()
             }
+            android.R.id.home ->{
+                finish()
+            }
         }
+
         return super.onOptionsItemSelected(item)
     }
 
