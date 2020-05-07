@@ -1,6 +1,7 @@
 package com.example.androidcoursework
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -41,13 +42,17 @@ class TeacherFragment : Fragment() {
         listView.adapter = TeacherListAdapter(activity as Context, R.layout.teacher_list_element, teacherList)
         listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
-                //TODO intent
+                val intentToAddTeacher = Intent(activity, AddNewTeacherActivity::class.java)
+                intentToAddTeacher.putExtra("Create or change", "change")
+                startActivity(intentToAddTeacher)
             }
         })
 
         (view.findViewById(R.id.addTeacherButton) as FloatingActionButton).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                //TODO intent
+                val intentToAddTeacher = Intent(activity, AddNewTeacherActivity::class.java)
+                intentToAddTeacher.putExtra("Create or change", "create")
+                startActivity(intentToAddTeacher)
             }
         })
 
