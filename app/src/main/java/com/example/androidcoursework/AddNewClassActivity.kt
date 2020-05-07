@@ -44,7 +44,11 @@ class AddNewClassActivity : AppCompatActivity() {
         toolbar = findViewById<Toolbar>(R.id.addClassToolBar)
         setSupportActionBar(toolbar)
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "New subject"//Взять название subject из БД
+        if(intent.getStringExtra("Create or change") == "create"){
+            supportActionBar?.title = "New class"
+        } else if(intent.getStringExtra("Create or change") == "change"){
+            supportActionBar?.title = "Class"
+        }
 
         var aa = ArrayAdapter(this, R.layout.my_simple_spinner_item, classNumber)
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

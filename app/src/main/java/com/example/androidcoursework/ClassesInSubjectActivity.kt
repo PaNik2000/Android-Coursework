@@ -61,8 +61,9 @@ class ClassesInSubjectActivity : AppCompatActivity() {
         classesList.adapter = ClassListAdapter(this, R.layout.class_list_element, classesArray)
         classesList.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
-                //TODO intent
-                Log.d("weekType", "${itemClicked.findViewById<TextView>(R.id.weekDay).text}")
+                val intentToSubAdd = Intent(this@ClassesInSubjectActivity, AddNewClassActivity::class.java)
+                intentToSubAdd.putExtra("Create or change", "change")
+                startActivity(intentToSubAdd)
             }
         })
     }
@@ -94,6 +95,7 @@ class ClassesInSubjectActivity : AppCompatActivity() {
     fun onAddClassButtonClick(view: View){
         //Переходим к добавлению нового class'a
         val intentToSubAdd = Intent(this, AddNewClassActivity::class.java)
+        intentToSubAdd.putExtra("Create or change", "create")
         startActivity(intentToSubAdd)
     }
 }
