@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.thebluealliance.spectrum.SpectrumPalette
 import kotlinx.android.synthetic.main.activity_add_new_term.*
+import javax.security.auth.Subject
 
 class AddNewSubjectActivity : AppCompatActivity() {
 
@@ -26,10 +27,10 @@ class AddNewSubjectActivity : AppCompatActivity() {
         //Ничего непонятно, но очень интересно
         palette.setOnColorSelectedListener {
             clr -> color = clr
-            Log.d("aaa", "$color")
+            Log.d("aaa", "${color}")
         }
-        palette.setSelectedColor(resources.getColor(R.color.white))
-        color = resources.getColor(R.color.white)
+        palette.setSelectedColor(resources.getColor(R.color.red))
+        color = resources.getColor(R.color.red)
 
         editText = findViewById(R.id.newSubjectName)
 
@@ -40,8 +41,10 @@ class AddNewSubjectActivity : AppCompatActivity() {
             supportActionBar?.title = "New subject"
         } else if(intent.getStringExtra("Create or change") == "change"){
             supportActionBar?.title = "Subject"
+            //Получаем ID subjecta'a - val subjectID = intent.getIntExtra("subjectID")
+            //Получаем name subject'a - val subjectName = intent.getStringExtra("subjectName")
             val textView = findViewById(R.id.newSubjectName) as TextView
-            textView.text = "SUBJ_NAME"
+            textView.text = "SUBJ_NAME" // = subjectName
         }
 
     }
@@ -54,12 +57,22 @@ class AddNewSubjectActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.add -> {
-                //Сохраняем введенные данные в базу данных
-                Log.d("aaa", "$color ${editText.text}")
-                //db.put(color)
-                //db.put(editText.text)
+                if(findViewById<EditText>(R.id.newSubjectName).text.isEmpty()){
+                    Toast.makeText(this, "Fill in the gaps!", Toast.LENGTH_SHORT).show()
+                } else {
+                    //Сохраняем введенные данные в базу данных
+                    //ЕСЛИ ДОБАВЛЯЕМ НОВЫЙ
+                        //По-видимому делаем ID = null, тк он autoincrement
+                        val newSubj = Subject(null, findViewById<EditText>(R.id.termName).text.toString(), colorResources[idsOfColors.indexOf(color)], /*intent.getIntExtra("termID")*/11)
+                        //db.insert(newTerm)
 
-                //Возвращаемся к fragment_term
+                        //Возвращаемся к fragment_term
+                        Toast.makeText(this, "Why we still here?", Toast.LENGTH_SHORT).show()
+                    //ИНАЧЕ
+                    ////db.update(subjectID, findViewById<EditText>(R.id.newSubjectName).text.toString(), colorResources[idsOfColors.indexOf(color)], intent.getIntExtra("termID"))
+                }
+
+                //Возвращаемся к subjectsInTermActivity
                 Toast.makeText(this, "Еще одна пара по МБП...", Toast.LENGTH_SHORT).show()
                 finish()
             }

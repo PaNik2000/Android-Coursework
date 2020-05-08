@@ -41,31 +41,31 @@ class SubjectsInTermActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_subjects_in_term)
 
+        //Получаем ID term'a - val termID = intent.getIntExtra("termID")
+        //Получаем name term'a - val termName = intent.getStringExtra("termName")
+
         toolbar = findViewById<Toolbar>(R.id.subjToolBar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "NAME_OF_TERM" //Взять с БД название семестра
+        supportActionBar?.title = "NAME_OF_TERM" // = termName
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
         val subjectsList = findViewById(R.id.subjectsList) as ListView
 
-        //НА ЭТО Я КСТА ПОТРАТИЛ 3 ЧАСА))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-        val drawable1 = resources.getDrawable(R.drawable.light_blue)
-        val drawable2 = resources.getDrawable(R.drawable.blue)
-        val drawable3 = resources.getDrawable(R.drawable.yellow)
-        val drawable4 = resources.getDrawable(R.drawable.light_yellow)
+        //Получаем все subject'ы запросом по termID
+        //while(coursor.hasNext()) { subjArray<Subject>.add(coursor.next()) }
 
-        //Тут нужно будет наполнить subjList предметами из БД
-        subjArray.add(SubjectInfo(drawable1, "МБП"))
-        subjArray.add(SubjectInfo(drawable2, "ФИЛОСОФИя"))
-        subjArray.add(SubjectInfo(drawable3, "Системная и программная Жопа"))
-        subjArray.add(SubjectInfo(drawable4, "Мне подойти? МММ?"))
-        /////////////////////////////////////////////////////
+        //Потом удаляем
+        val drawable4 = resources.getDrawable(R.drawable.light_orange)
+        subjArray.add(SubjectInfo(drawable4, "МБП"))
+        ////////////////
 
         subjectsList.adapter = SubjectListAdapter(this, R.layout.subject_list_element, subjArray)
         subjectsList.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
-                //TODO intent
+                //Магическим образом достаем ID и имя subject'a из БД
                 val intentToClass = Intent(this@SubjectsInTermActivity, ClassesInSubjectActivity::class.java)
+                //intentToClass.putExtra("subjectID", subjectID)
+                //intentToClass.putExtra("subjectName", subjectName)
                 startActivity(intentToClass)
             }
         })
@@ -80,12 +80,15 @@ class SubjectsInTermActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.changeTerm -> {
                 //Открываем addNewTermActivity, чтобы настроить/изменить его
-                val intentToANTA = Intent(this, AddNewTermActivity::class.java)
-                intentToANTA.putExtra("Create or change", "change")
-                startActivity(intentToANTA)
+                val intentToAddNeTermAactivity = Intent(this, AddNewTermActivity::class.java)
+                intentToAddNeTermAactivity.putExtra("Create or change", "change")
+                //intentToAddNeTermAactivity.putExtra("termName", termName)
+                //intentToAddNeTermAactivity.putExtra("termID", termID)
+                startActivity(intentToAddNeTermAactivity)
             }
             R.id.deleteTerm->{
                 //Удаляем term из БД и возвращаемся в планер
+                //db.delete(termID)
                 finish()
             }
             android.R.id.home ->{
@@ -99,6 +102,7 @@ class SubjectsInTermActivity : AppCompatActivity() {
         //Переходим к добавлению нового subject'a
         val intentToSubjAdd = Intent(this, AddNewSubjectActivity::class.java)
         intentToSubjAdd.putExtra("Create or change", "create")
+        //intentToSubjAdd.putExtra("termID", intent.getIntExtra("termID"))
         startActivity(intentToSubjAdd)
     }
 }

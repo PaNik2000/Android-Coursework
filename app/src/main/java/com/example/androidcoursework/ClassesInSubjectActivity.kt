@@ -46,24 +46,34 @@ class ClassesInSubjectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_classes_in_subject)
 
+        //Получаем ID subject'a - val subjectID = intent.getIntExtra("subjectID")
+        //Получаем name subject'a - val subjectName = intent.getStringExtra("subjectName")
+
         toolbar = findViewById(R.id.classToolBar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "NAME_OF_TERM" //Взять с БД название
+        supportActionBar?.title = "NAME_OF_CLASS" // = intent.getStringExtra("className")
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
-        val drawable1 = resources.getDrawable(R.drawable.light_blue)
+        //Получаем все class'ы запросом по subjectID
+        //while(coursor.hasNext()) { subjArray<MyClass>.add(coursor.next()) }
 
+        //Потом удалить
+        val drawable1 = resources.getDrawable(R.drawable.light_blue)
         classesArray.add(ClassInfo(drawable1, "Лекция", "Шашлыков Н.А.", "1 Пара", "Пн, Вт"))
-        classesArray.add(ClassInfo(drawable1, "Практика", "Лох ААаА.", "2 Пара", "Ср, Пт"))
-        classesArray.add(ClassInfo(drawable1, "Лекция", "Жаба Краба", "69 Пара", "Чт, Сб, Вс"))
+        ////////////////////////
 
         val classesList = findViewById(R.id.classesList) as ListView
         classesList.adapter = ClassListAdapter(this, R.layout.class_list_element, classesArray)
         classesList.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
-                val intentToSubAdd = Intent(this@ClassesInSubjectActivity, AddNewClassActivity::class.java)
-                intentToSubAdd.putExtra("Create or change", "change")
-                startActivity(intentToSubAdd)
+                val intentToClassAdd = Intent(this@ClassesInSubjectActivity, AddNewClassActivity::class.java)
+                //Невообразимым образом достаем ID и тип выбранной пары
+                //intentToClassAdd.putExtra("classID", classID)
+                //intentToClassAdd.putExtra("classType", classType)
+                //intentToClassAdd.putExtra("subjectID" subjectID)
+                //intentToClassAdd.putExtra("subjectName" subjectName)
+                intentToClassAdd.putExtra("Create or change", "change")
+                startActivity(intentToClassAdd)
             }
         })
     }
@@ -83,6 +93,7 @@ class ClassesInSubjectActivity : AppCompatActivity() {
             }
             R.id.deleteClass->{
                 //Удаляем term из БД и возвращаемся в планер
+                //db.delete(subjectID)
                 finish()
             }
             android.R.id.home ->{
@@ -96,6 +107,8 @@ class ClassesInSubjectActivity : AppCompatActivity() {
         //Переходим к добавлению нового class'a
         val intentToSubAdd = Intent(this, AddNewClassActivity::class.java)
         intentToSubAdd.putExtra("Create or change", "create")
+        //intentToSubAdd.putExtra("subjectID" subjectID)
+        //intentToSubAdd.putExtra("subjectName" subjectName)
         startActivity(intentToSubAdd)
     }
 }

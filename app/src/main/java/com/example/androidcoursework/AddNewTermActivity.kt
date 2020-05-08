@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,7 @@ class AddNewTermActivity : AppCompatActivity() {
 
         mStartDate = findViewById<TextView>(R.id.startDate)
         mEndDate = findViewById<TextView>(R.id.endDate)
+
         var curDate = Date()
         val dateFormat = SimpleDateFormat("dd.MM.yyy")
         mStartDate.text = dateFormat.format(curDate)
@@ -39,13 +41,13 @@ class AddNewTermActivity : AppCompatActivity() {
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
         Log.d("qqq", intent.getStringExtra("Create or change"))
         if(intent.getStringExtra("Create or change") == "create") {
-            Log.d("qqq", "yes")
             supportActionBar?.title = "New term"
         } else if(intent.getStringExtra("Create or change") == "change") {
-            supportActionBar?.title = "Term" // Взять имя из БД
             val textView = findViewById(R.id.termName) as TextView;
-            textView.text = "TERM_NAME"
-            Log.d("qqq", "no")
+            supportActionBar?.title = "Term"
+            //Получаем ID term'a - val termID = intent.getIntExtra("termID")
+            //Получаем name term'a - val termName = intent.getStringExtra("termName")
+            textView.text = "TERM_NAME" // = termName
         }
 
     }
@@ -60,15 +62,21 @@ class AddNewTermActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.add -> {
-                //Сохраняем введенные данные в базу данных
-                val sDate = mStartDate.text
-                val eDate = mEndDate.text
-                //db.put(sDate)
-                //db.put(eDate)
+                if(findViewById<EditText>(R.id.termName).text.isEmpty()){
+                    Toast.makeText(this, "Fill in the gaps!", Toast.LENGTH_SHORT).show()
+                } else {
+                    //Сохраняем введенные данные в базу данных
+                    //ЕСЛИ СОЗДАЕМ НОВЫЙ, ТО ЭТО
+                        //По-видимому делаем ID = null, тк он autoincrement
+                        val newTerm = Term(null, findViewById<EditText>(R.id.termName).text.toString(), mStartDate.text.toString(), mEndDate.text.toString())
+                        //db.insert(newTerm)
 
-                //Возвращаемся к fragment_term
-                Toast.makeText(this, "Why we still here?", Toast.LENGTH_SHORT).show()
-                finish()
+                        //Возвращаемся к fragment_term
+                        Toast.makeText(this, "Why we still here?", Toast.LENGTH_SHORT).show()
+                    //ИНАЧЕ ЭТО
+                    //db.update(ID, findViewById<EditText>(R.id.termName).text.toString(), mStartDate.text.toString(), mEndDate.text.toString()))
+                    finish()
+                }
             }
             android.R.id.home ->{
                 finish()

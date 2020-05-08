@@ -35,6 +35,10 @@ class TermFragment : Fragment() {
 
         val listView = view.findViewById(R.id.termList) as ListView
 
+        //Получаем все term'ы
+        //while(coursor.hasNext()) { termList<Term>.add(coursor.next()) }
+
+        //Это потом не понадобится /////////////////
         val start = Calendar.getInstance()
         val end = Calendar.getInstance()
         val start2 = Calendar.getInstance()
@@ -45,14 +49,19 @@ class TermFragment : Fragment() {
         start2.set(2019, Calendar.SEPTEMBER, 1)
         end2.set(2019, Calendar.DECEMBER, 31)
         termList.add(TermInfo("2 term", start2, end2))
+        ////////////////////////////////////////////////////
 
         Log.d("abc", termList.size.toString())
 
         listView.adapter = TermListAdapter(activity as Context, R.layout.term_list_element, termList)
         listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
-                //TODO intent
                 val intent = Intent(activity, SubjectsInTermActivity::class.java)
+                //Как-то получаем айдишник текущего term'a, а также его имя и передаем вместе с интентом
+
+                //Запрос жопы...
+                //intent.putExtra("termID", ID)
+                //intent.putExtra("termName", termName)
                 startActivity(intent)
             }
         })
@@ -85,5 +94,8 @@ class TermListAdapter(context : Context, val resource: Int, objects: MutableList
 
 }
 
+//ToDo По возврату из AddNewActivityClass В ЛЮБОМ СЛУЧАЕ обновляем спиок
+//ToDo Возможно следует использовать метод onResume или что-то подобное
 
+//ToDo По идее, нужно заменить его на Term Class
 class TermInfo(val name : String, val startDate : Calendar, val endDate : Calendar)
