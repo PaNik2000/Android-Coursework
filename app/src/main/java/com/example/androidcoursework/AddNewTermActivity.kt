@@ -40,6 +40,7 @@ class AddNewTermActivity : AppCompatActivity() {
         toolbar = findViewById<Toolbar>(R.id.termToolBar)
         setSupportActionBar(toolbar)
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
+
         if(createNewTerm) {
             var curDate = Date()
             val dateFormat = SimpleDateFormat("dd.MM.yyyy")

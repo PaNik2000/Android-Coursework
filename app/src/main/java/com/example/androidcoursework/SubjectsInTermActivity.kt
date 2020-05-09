@@ -7,12 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.*
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_subjects_in_term.*
 
-class SubjectInfo(val color : Drawable, val name : String)
-
-class SubjectListAdapter(context : Context, val resource: Int, objects: MutableList<SubjectInfo>)
-    : ArrayAdapter<SubjectInfo>(context, resource, objects){
+class SubjectListAdapter(context : Context, val resource: Int, objects: MutableList<Subject>)
+    : ArrayAdapter<Subject>(context, resource, objects){
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val subject = getItem(position)
@@ -21,9 +21,8 @@ class SubjectListAdapter(context : Context, val resource: Int, objects: MutableL
         if (view == null) {
             view = LayoutInflater.from(context).inflate(resource, null)
         }
-
-        //НЕ ЗАБВАЕМ ПРО 3 ЧАСА D:
-        (view?.findViewById(R.id.subjColor) as View).background = subject?.color
+        //Очень красивая строчка <3
+        (view?.findViewById(R.id.subjColor) as View).background = getDrawable(context, colorResources[idsOfColors.indexOf(subject?.color)])
         (view?.findViewById(R.id.subjName) as TextView).text = subject?.name
 
         return view
@@ -33,42 +32,52 @@ class SubjectListAdapter(context : Context, val resource: Int, objects: MutableL
 
 class SubjectsInTermActivity : AppCompatActivity() {
 
-    private val subjArray = ArrayList<SubjectInfo>()
-    // Кастомный тулбар наверху
+    lateinit var subjArray: MutableList<Subject>
     lateinit var toolbar : Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_subjects_in_term)
 
-        //Получаем ID term'a - val termID = intent.getIntExtra("termID")
-        //Получаем name term'a - val termName = intent.getStringExtra("termName")
-
         toolbar = findViewById<Toolbar>(R.id.subjToolBar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "NAME_OF_TERM" // = termName
+        supportActionBar?.title = intent.getStringExtra("termName")
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
         val subjectsList = findViewById(R.id.subjectsList) as ListView
 
         //Получаем все subject'ы запросом по termID
-        //while(coursor.hasNext()) { subjArray<Subject>.add(coursor.next()) }
-
-        //Потом удаляем
-        val drawable4 = resources.getDrawable(R.drawable.light_orange)
-        subjArray.add(SubjectInfo(drawable4, "МБП"))
-        ////////////////
+        subjArray = DBHelper(this@SubjectsInTermActivity).getSubjects()
+        subjArray.clear()
+        val tempArray = DBHelper(this@SubjectsInTermActivity).getSubjects()
+        for (subj in tempArray){
+            if(subj.termID == intent.getIntExtra("termID", -1))
+                subjArray.add(subj)
+        }
 
         subjectsList.adapter = SubjectListAdapter(this, R.layout.subject_list_element, subjArray)
         subjectsList.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
-                //Магическим образом достаем ID и имя subject'a из БД
                 val intentToClass = Intent(this@SubjectsInTermActivity, ClassesInSubjectActivity::class.java)
-                //intentToClass.putExtra("subjectID", subjectID)
-                //intentToClass.putExtra("subjectName", subjectName)
+                val subjectID = subjArray[position].ID
+                intentToClass.putExtra("subjectID", subjectID)
+                intentToClass.putExtra("subjectName", subjArray[position].name)
+                intentToClass.putExtra("color", subjArray[position].color)
+                intentToClass.putExtra("termID", intent.getIntExtra("termID", -1))
                 startActivity(intentToClass)
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        subjArray.clear()
+        val tempArray = DBHelper(this@SubjectsInTermActivity).getSubjects()
+        for (subj in tempArray){
+            if(subj.termID == intent.getIntExtra("termID", -1))
+                subjArray.add(subj)
+        }
+        subjectsList.adapter = SubjectListAdapter(this, R.layout.subject_list_element, subjArray)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -101,7 +110,7 @@ class SubjectsInTermActivity : AppCompatActivity() {
         //Переходим к добавлению нового subject'a
         val intentToSubjAdd = Intent(this, AddNewSubjectActivity::class.java)
         intentToSubjAdd.putExtra("Create or change", "create")
-        //intentToSubjAdd.putExtra("termID", intent.getIntExtra("termID"))
+        intentToSubjAdd.putExtra("termID", intent.getIntExtra("termID", -1))
         startActivity(intentToSubjAdd)
     }
 }

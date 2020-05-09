@@ -51,7 +51,7 @@ class ClassesInSubjectActivity : AppCompatActivity() {
 
         toolbar = findViewById(R.id.classToolBar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "NAME_OF_CLASS" // = intent.getStringExtra("className")
+        supportActionBar?.title = intent.getStringExtra("subjectName")
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
         //Получаем все class'ы запросом по subjectID
@@ -89,11 +89,15 @@ class ClassesInSubjectActivity : AppCompatActivity() {
                 //Открываем addNewSubjectActivity, чтобы настроить/изменить его
                 val intentToSubjAdd = Intent(this, AddNewSubjectActivity::class.java)
                 intentToSubjAdd.putExtra("Create or change", "change")
+                intentToSubjAdd.putExtra("subjectID", intent.getIntExtra("subjectID", -1))
+                intentToSubjAdd.putExtra("subjectName", intent.getStringExtra("subjectName"))
+                intentToSubjAdd.putExtra("color", intent.getIntExtra("color", -1))
+                intentToSubjAdd.putExtra("termID", intent.getIntExtra("termID", -1))
                 startActivity(intentToSubjAdd)
             }
             R.id.deleteClass->{
                 //Удаляем term из БД и возвращаемся в планер
-                //db.delete(subjectID)
+                DBHelper(this).deleteSubjectsById(intent.getIntExtra("subjectID", -1))
                 finish()
             }
             android.R.id.home ->{
