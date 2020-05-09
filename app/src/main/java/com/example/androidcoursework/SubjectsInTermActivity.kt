@@ -82,13 +82,12 @@ class SubjectsInTermActivity : AppCompatActivity() {
                 //Открываем addNewTermActivity, чтобы настроить/изменить его
                 val intentToAddNeTermAactivity = Intent(this, AddNewTermActivity::class.java)
                 intentToAddNeTermAactivity.putExtra("Create or change", "change")
-                //intentToAddNeTermAactivity.putExtra("termName", termName)
-                //intentToAddNeTermAactivity.putExtra("termID", termID)
+                intentToAddNeTermAactivity.putExtra("termID", intent.getIntExtra("termID", -1))
+                intentToAddNeTermAactivity.putExtra("termName", intent.getStringExtra("termName"))
                 startActivity(intentToAddNeTermAactivity)
             }
             R.id.deleteTerm->{
-                //Удаляем term из БД и возвращаемся в планер
-                //db.delete(termID)
+                DBHelper(this).deleteTermByID(intent.getIntExtra("termID", -1))
                 finish()
             }
             android.R.id.home ->{

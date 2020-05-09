@@ -12,13 +12,13 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import kotlin.collections.ArrayList
-import java.util.*
 
 
 class TermFragment : Fragment() {
 
-    private val termList = ArrayList<TermInfo>()
+    lateinit var termList: MutableList<Term>
+    lateinit var listView: ListView
+//    val db = DBHelper(activity as Context)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,23 +32,22 @@ class TermFragment : Fragment() {
         Log.d("abc", "term fragment")
 
         val view = inflater.inflate(R.layout.fragment_term, container, false)
-
-        val listView = view.findViewById(R.id.termList) as ListView
+        listView = view.findViewById(R.id.termList) as ListView
 
         //Получаем все term'ы
-        //while(coursor.hasNext()) { termList<Term>.add(coursor.next()) }
+        termList = DBHelper(activity as Context).getTerm()
 
         //Это потом не понадобится /////////////////
-        val start = Calendar.getInstance()
-        val end = Calendar.getInstance()
-        val start2 = Calendar.getInstance()
-        val end2 = Calendar.getInstance()
-        start.set(2019, Calendar.FEBRUARY, 1)
-        end.set(2019, Calendar.MAY, 31)
-        termList.add(TermInfo("1 term", start, end))
-        start2.set(2019, Calendar.SEPTEMBER, 1)
-        end2.set(2019, Calendar.DECEMBER, 31)
-        termList.add(TermInfo("2 term", start2, end2))
+//        val start = Calendar.getInstance()
+//        val end = Calendar.getInstance()
+//        val start2 = Calendar.getInstance()
+//        val end2 = Calendar.getInstance()
+//        start.set(2019, Calendar.FEBRUARY, 1)
+//        end.set(2019, Calendar.MAY, 31)
+//        termList.add(TermInfo("1 term", start, end))
+//        start2.set(2019, Calendar.SEPTEMBER, 1)
+//        end2.set(2019, Calendar.DECEMBER, 31)
+//        termList.add(TermInfo("2 term", start2, end2))
         ////////////////////////////////////////////////////
 
         Log.d("abc", termList.size.toString())
@@ -58,21 +57,30 @@ class TermFragment : Fragment() {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
                 val intent = Intent(activity, SubjectsInTermActivity::class.java)
                 //Как-то получаем айдишник текущего term'a, а также его имя и передаем вместе с интентом
-
+                val termID = termList[position].ID
+                val termName = termList[position].name
                 //Запрос жопы...
-                //intent.putExtra("termID", ID)
-                //intent.putExtra("termName", termName)
+                intent.putExtra("termID", termID)
+                intent.putExtra("termName", termName)
                 startActivity(intent)
             }
         })
 
         return view
     }
+
+    override fun onResume() {
+        super.onResume()
+        termList = DBHelper(activity as Context).getTerm()
+        listView.adapter = TermListAdapter(activity as Context, R.layout.term_list_element, termList)
+        Log.d("term", "onResume")
+    }
+
 }
 
-class TermListAdapter(context : Context, val resource: Int, objects: MutableList<TermInfo>)
-    : ArrayAdapter<TermInfo>(context, resource, objects){
-
+class TermListAdapter(context : Context, val resource: Int, objects: MutableList<Term>)
+    : ArrayAdapter<Term>(context, resource, objects){
+    val db = DBHelper(context)
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val term = getItem(position)
         var view = convertView
@@ -81,8 +89,7 @@ class TermListAdapter(context : Context, val resource: Int, objects: MutableList
             view = LayoutInflater.from(context).inflate(resource, null)
         }
 
-        val str = "${term?.startDate?.get(Calendar.DAY_OF_MONTH)}.${term?.startDate?.get(Calendar.MONTH)} - " +
-                "${term?.endDate?.get(Calendar.DAY_OF_MONTH)}.${term?.endDate?.get(Calendar.MONTH)}"
+        val str = "${term?.startDate} - ${term?.endDate}"
 
         (view?.findViewById(R.id.termName) as TextView).text = term?.name
         (view.findViewById(R.id.termDates) as TextView).text = str
@@ -93,9 +100,3 @@ class TermListAdapter(context : Context, val resource: Int, objects: MutableList
     }
 
 }
-
-//ToDo По возврату из AddNewActivityClass В ЛЮБОМ СЛУЧАЕ обновляем спиок
-//ToDo Возможно следует использовать метод onResume или что-то подобное
-
-//ToDo По идее, нужно заменить его на Term Class
-class TermInfo(val name : String, val startDate : Calendar, val endDate : Calendar)

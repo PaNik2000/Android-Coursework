@@ -84,9 +84,9 @@ class AddNewClassActivity : AppCompatActivity() {
                 //ЕСЛИ СОЗДАЕМ ТО
                     if(findViewById<EditText>(R.id.editTypeClass).text.isEmpty()){
                         Toast.makeText(this, "Fill in the gaps!", Toast.LENGTH_SHORT).show()
-                    } else if(!findViewById<ToggleButton>(R.id.monday).isChecked || !findViewById<ToggleButton>(R.id.tuesday).isChecked ||
-                        !findViewById<ToggleButton>(R.id.wednesday).isChecked || !findViewById<ToggleButton>(R.id.thursday).isChecked ||
-                        !findViewById<ToggleButton>(R.id.friday).isChecked || !findViewById<ToggleButton>(R.id.saturday).isChecked ||
+                    } else if(!findViewById<ToggleButton>(R.id.monday).isChecked && !findViewById<ToggleButton>(R.id.tuesday).isChecked &&
+                        !findViewById<ToggleButton>(R.id.wednesday).isChecked && !findViewById<ToggleButton>(R.id.thursday).isChecked &&
+                        !findViewById<ToggleButton>(R.id.friday).isChecked && !findViewById<ToggleButton>(R.id.saturday).isChecked &&
                         !findViewById<ToggleButton>(R.id.sunday).isChecked){
                         Toast.makeText(this, "Choose the day of a week!", Toast.LENGTH_SHORT).show()
                     } else {

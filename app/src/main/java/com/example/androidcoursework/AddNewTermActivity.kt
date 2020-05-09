@@ -23,31 +23,37 @@ class AddNewTermActivity : AppCompatActivity() {
     // Поле выбора начала семестра
     lateinit var mEndDate : TextView
 
+    var createNewTerm = true
+
+    val db = DBHelper(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_new_term)
 
+        if(intent.getStringExtra("Create or change") == "change")
+            createNewTerm = false
+
         mStartDate = findViewById<TextView>(R.id.startDate)
         mEndDate = findViewById<TextView>(R.id.endDate)
-
-        var curDate = Date()
-        val dateFormat = SimpleDateFormat("dd.MM.yyy")
-        mStartDate.text = dateFormat.format(curDate)
-        curDate = addMonthToDate(curDate, 3)
-        mEndDate.text = dateFormat.format(curDate)
 
         toolbar = findViewById<Toolbar>(R.id.termToolBar)
         setSupportActionBar(toolbar)
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
-        Log.d("qqq", intent.getStringExtra("Create or change"))
-        if(intent.getStringExtra("Create or change") == "create") {
+        if(createNewTerm) {
+            var curDate = Date()
+            val dateFormat = SimpleDateFormat("dd.MM.yyyy")
+            mStartDate.text = dateFormat.format(curDate)
+            curDate = addMonthToDate(curDate, 3)
+            mEndDate.text = dateFormat.format(curDate)
+            Log.d("DBLogs", "adding new")
             supportActionBar?.title = "New term"
-        } else if(intent.getStringExtra("Create or change") == "change") {
-            val textView = findViewById(R.id.termName) as TextView;
+        } else {
             supportActionBar?.title = "Term"
-            //Получаем ID term'a - val termID = intent.getIntExtra("termID")
-            //Получаем name term'a - val termName = intent.getStringExtra("termName")
-            textView.text = "TERM_NAME" // = termName
+            val textView = findViewById(R.id.termName) as TextView;
+            textView.text = intent.getStringExtra("termName")
+            mStartDate.text = db.getTermByID(intent.getIntExtra("termID", -1))?.startDate
+            mEndDate.text = db.getTermByID(intent.getIntExtra("termID", -1))?.endDate
         }
 
     }
@@ -64,19 +70,19 @@ class AddNewTermActivity : AppCompatActivity() {
             R.id.add -> {
                 if(findViewById<EditText>(R.id.termName).text.isEmpty()){
                     Toast.makeText(this, "Fill in the gaps!", Toast.LENGTH_SHORT).show()
-                } else {
-                    //Сохраняем введенные данные в базу данных
-                    //ЕСЛИ СОЗДАЕМ НОВЫЙ, ТО ЭТО
-                        //По-видимому делаем ID = null, тк он autoincrement
-                        val newTerm = Term(null, findViewById<EditText>(R.id.termName).text.toString(), mStartDate.text.toString(), mEndDate.text.toString())
-                        //db.insert(newTerm)
-
-                        //Возвращаемся к fragment_term
-                        Toast.makeText(this, "Why we still here?", Toast.LENGTH_SHORT).show()
-                    //ИНАЧЕ ЭТО
-                    //db.update(ID, findViewById<EditText>(R.id.termName).text.toString(), mStartDate.text.toString(), mEndDate.text.toString()))
+                } else if(createNewTerm){
+                    Log.d("DBLogs", "generating")
+                    val startDate = SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString())
+                    val endDate = SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString())
+                    db.insertTerm(findViewById<EditText>(R.id.termName).text.toString(), startDate, endDate)
+                    Toast.makeText(this, "Why we still here?", Toast.LENGTH_SHORT).show()
                     finish()
+                } else {
+                    val startDate = SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString())
+                    val endDate = SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString())
+                    db.updateTerm(intent.getIntExtra("termID", -1), findViewById<EditText>(R.id.termName).text.toString(), startDate, endDate)
                 }
+                finish()
             }
             android.R.id.home ->{
                 finish()

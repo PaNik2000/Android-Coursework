@@ -6,10 +6,11 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import java.sql.Time
+import java.text.SimpleDateFormat
 import java.util.*
 
 
-internal class DBHelper(context: Context)
+class DBHelper(context: Context)
     : SQLiteOpenHelper(context, "courseWorkDB", null, 1) {
 
     val LOG_TAG = "DBLogs"
@@ -19,7 +20,7 @@ internal class DBHelper(context: Context)
 
         // TERM////////////////////////////////////////////////////////////////////////////////////////////
         db.execSQL(("create table term ("
-                + "id integer primary key auto_increment,"
+                + "id integer primary key autoincrement,"
                 + "name text,"
                 + "start_date date,"
                 + "end_date date"
@@ -28,7 +29,7 @@ internal class DBHelper(context: Context)
 
         //SCHEDULE////////////////////////////////////////////////////////////////////////////////////////////
         db.execSQL(("create table schedule ("
-                + "id integer primary key auto_increment,"
+                + "id integer primary key autoincrement,"
                 + "position integer not null,"
                 + "start_time time not null,"
                 + "end_time time not null"
@@ -37,14 +38,14 @@ internal class DBHelper(context: Context)
 
         //TEACHERS////////////////////////////////////////////////////////////////////////////////////////////
         db.execSQL(("create table teachers ("
-                + "id integer primary key auto_increment,"
+                + "id integer primary key autoincrement,"
                 + "name text not null"
                 + ");"))
         Log.d(LOG_TAG, "Teachers created")
 
         //SUBJECTS////////////////////////////////////////////////////////////////////////////////////////////
         db.execSQL(("create table subjects ("
-                + "id integer primary key auto_increment,"
+                + "id integer primary key autoincrement,"
                 + "name text,"
                 + "color integer,"
                 + "term_id int,"
@@ -56,7 +57,7 @@ internal class DBHelper(context: Context)
 
         //SUB_TEACHERS////////////////////////////////////////////////////////////////////////////////////////////
         db.execSQL(("create table sub_teachers("
-                + "id integer primary key auto_increment,"
+                + "id integer primary key autoincrement,"
                 + "subject_id integer,"
                 + "teacher_id integer,"
 
@@ -68,7 +69,7 @@ internal class DBHelper(context: Context)
 
         //CLASSES////////////////////////////////////////////////////////////////////////////////////////////
         db.execSQL(("create table classes ("
-                + "id integer primary key auto_increment,"
+                + "id integer primary key autoincrement,"
                 + "subject_id int,"
                 + "type text,"
                 + "position int,"
@@ -80,7 +81,7 @@ internal class DBHelper(context: Context)
                 + "teacher_id int,"
 
                 + "foreign key(subject_id) references subjects(id) on delete cascade,"
-                + "foreign key(position) references schedule(id) on delete set null"
+                + "foreign key(position) references schedule(id) on delete set null,"
                 + "foreign key(teacher_id) references teachers(id) on delete set null"
 
                 + ");"))
@@ -129,10 +130,9 @@ internal class DBHelper(context: Context)
         with(record)
         {
             put("name", name)
-            put("start_date", start_date.toString())
-            put("end_date", end_date.toString())
+            put("start_date", SimpleDateFormat("dd.MM.yyyy").format(start_date)/*start_date.toString()*/)
+            put("end_date",SimpleDateFormat("dd.MM.yyyy").format(end_date) /*end_date.toString()*/)
         }
-
         writableDatabase.insert("term", null, record)
         Log.d(LOG_TAG, "inserted into term")
     }
@@ -525,8 +525,8 @@ internal class DBHelper(context: Context)
         with(record)
         {
             put("name", name)
-            put("start_date", start_date.toString())
-            put("end_date", end_date.toString())
+            put("start_date", SimpleDateFormat("dd.MM.yyyy").format(start_date))
+            put("end_date", SimpleDateFormat("dd.MM.yyyy").format(end_date))
         }
 
         writableDatabase.update("term", record, "id = $id", null)
