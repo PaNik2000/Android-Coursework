@@ -2,7 +2,6 @@ package com.example.androidcoursework
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,12 +10,12 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_classes_in_subject.*
 
-class ClassInfo(val color: Drawable, val classType: String, val teacherID: String, val positionID: String, val weekDay: String)
-
-class ClassListAdapter(context : Context, val resource: Int, objects: MutableList<ClassInfo>)
-    : ArrayAdapter<ClassInfo>(context, resource, objects){
+class ClassListAdapter(context : Context, val resource: Int, objects: MutableList<MyClass>)
+    : ArrayAdapter<MyClass>(context, resource, objects){
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val mClass = getItem(position)
@@ -26,11 +25,42 @@ class ClassListAdapter(context : Context, val resource: Int, objects: MutableLis
             view = LayoutInflater.from(context).inflate(resource, null)
         }
 
-        (view?.findViewById(R.id.classColor) as View).background = mClass?.color
-        (view?.findViewById(R.id.classType) as TextView).text = mClass?.classType
-        (view?.findViewById(R.id.teacherID) as TextView).text = mClass?.teacherID
-        (view?.findViewById(R.id.positionID) as TextView).text = mClass?.positionID
-        (view?.findViewById(R.id.weekDay) as TextView).text = mClass?.weekDay
+        var weekDay = mClass?.weekDay
+        var weekDayStr = ""
+        var intArray = IntArray(7)
+        var devider = 1000000
+        for(i in 0..6){
+            intArray[i] = weekDay!!/devider
+            weekDay = weekDay % devider
+            devider = devider / 10
+        }
+        if(intArray[0] == 1)
+            weekDayStr += "Пн "
+        if(intArray[1] == 1)
+            weekDayStr += "Вт "
+        if(intArray[2] == 1)
+            weekDayStr += "Ср "
+        if(intArray[3] == 1)
+            weekDayStr += "Чт "
+        if(intArray[4] == 1)
+            weekDayStr += "Пт "
+        if(intArray[5] == 1)
+            weekDayStr += "Сб "
+        if(intArray[6] == 1)
+            weekDayStr += "Вс"
+
+        val subjects = DBHelper(context).getSubjects()
+        var subject = Subject(-1, "", 1, 1)
+        for (subj in subjects) {
+            if (mClass?.subjectID == subj.ID)
+                subject = subj
+        }
+
+        (view?.findViewById(R.id.classColor) as View).background = getDrawable(context, colorResources[idsOfColors.indexOf(subject.color)])
+        (view?.findViewById(R.id.classType) as TextView).text = mClass?.type
+        (view?.findViewById(R.id.teacherID) as TextView).text = "Пока что учитель это ЯЯ"//DBHelper(context).getTeachersById(mClass!!.teacherID)?.name
+        (view?.findViewById(R.id.positionID) as TextView).text = "1 пара"//"${DBHelper(context).getScheduleById(mClass!!.scheduleID)?.position.toString()} Пара"
+        (view?.findViewById(R.id.weekDay) as TextView).text = weekDayStr
 
         return view
     }
@@ -38,44 +68,49 @@ class ClassListAdapter(context : Context, val resource: Int, objects: MutableLis
 
 class ClassesInSubjectActivity : AppCompatActivity() {
 
-    private val classesArray = ArrayList<ClassInfo>()
-    // Кастомный тулбар наверху
+    lateinit var classesArray: MutableList<MyClass>
     lateinit var toolbar : Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_classes_in_subject)
 
-        //Получаем ID subject'a - val subjectID = intent.getIntExtra("subjectID")
-        //Получаем name subject'a - val subjectName = intent.getStringExtra("subjectName")
-
         toolbar = findViewById(R.id.classToolBar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = intent.getStringExtra("subjectName")
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
-        //Получаем все class'ы запросом по subjectID
-        //while(coursor.hasNext()) { subjArray<MyClass>.add(coursor.next()) }
-
-        //Потом удалить
-        val drawable1 = resources.getDrawable(R.drawable.light_blue)
-        classesArray.add(ClassInfo(drawable1, "Лекция", "Шашлыков Н.А.", "1 Пара", "Пн, Вт"))
-        ////////////////////////
+        //Получаем все class'ы
+        classesArray = DBHelper(this).getClasses()
+        classesArray.clear()
+        val tempArray = DBHelper(this).getClasses()
+        for(mClass in tempArray){
+            if(mClass.ID == intent.getIntExtra("subjectID", -1))
+                classesArray.add(mClass)
+        }
 
         val classesList = findViewById(R.id.classesList) as ListView
         classesList.adapter = ClassListAdapter(this, R.layout.class_list_element, classesArray)
         classesList.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
                 val intentToClassAdd = Intent(this@ClassesInSubjectActivity, AddNewClassActivity::class.java)
-                //Невообразимым образом достаем ID и тип выбранной пары
-                //intentToClassAdd.putExtra("classID", classID)
-                //intentToClassAdd.putExtra("classType", classType)
-                //intentToClassAdd.putExtra("subjectID" subjectID)
-                //intentToClassAdd.putExtra("subjectName" subjectName)
                 intentToClassAdd.putExtra("Create or change", "change")
+                intentToClassAdd.putExtra("subjectID", intent.getIntExtra("subjectID", -1))
+                intentToClassAdd.putExtra("classID", classesArray[position].ID)
                 startActivity(intentToClassAdd)
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        classesArray.clear()
+        val tempArray = DBHelper(this).getClasses()
+        for(mClass in tempArray){
+            if(mClass.subjectID == intent.getIntExtra("subjectID", -1))
+                classesArray.add(mClass)
+        }
+        classesList.adapter = ClassListAdapter(this, R.layout.class_list_element, classesArray)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -85,7 +120,7 @@ class ClassesInSubjectActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.changeClass -> {
+            R.id.changeSubject -> {
                 //Открываем addNewSubjectActivity, чтобы настроить/изменить его
                 val intentToSubjAdd = Intent(this, AddNewSubjectActivity::class.java)
                 intentToSubjAdd.putExtra("Create or change", "change")
@@ -95,7 +130,7 @@ class ClassesInSubjectActivity : AppCompatActivity() {
                 intentToSubjAdd.putExtra("termID", intent.getIntExtra("termID", -1))
                 startActivity(intentToSubjAdd)
             }
-            R.id.deleteClass->{
+            R.id.deleteSubject->{
                 //Удаляем term из БД и возвращаемся в планер
                 DBHelper(this).deleteSubjectsById(intent.getIntExtra("subjectID", -1))
                 finish()
@@ -111,8 +146,8 @@ class ClassesInSubjectActivity : AppCompatActivity() {
         //Переходим к добавлению нового class'a
         val intentToSubAdd = Intent(this, AddNewClassActivity::class.java)
         intentToSubAdd.putExtra("Create or change", "create")
-        //intentToSubAdd.putExtra("subjectID" subjectID)
-        //intentToSubAdd.putExtra("subjectName" subjectName)
+        intentToSubAdd.putExtra("subjectID", intent.getIntExtra("subjectID", -1))
+        intentToSubAdd.putExtra("subjectName", intent.getStringExtra("subjectName"))
         startActivity(intentToSubAdd)
     }
 }

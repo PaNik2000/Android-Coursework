@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/changeClass"
+    <item android:id="@+id/changeSubject"
         android:title="Change subject"
         android:orderInCategory="100"
         app:showAsAction="never"/>
-    <item android:id="@+id/deleteClass"
+    <item android:id="@+id/deleteSubject"
         android:title="Delete subject"
         android:orderInCategory="100"
         app:showAsAction="never"/>

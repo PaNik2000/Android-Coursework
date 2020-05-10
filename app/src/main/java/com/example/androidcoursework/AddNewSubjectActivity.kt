@@ -47,10 +47,9 @@ class AddNewSubjectActivity : AppCompatActivity() {
             supportActionBar?.title = "Subject"
             val textView = findViewById(R.id.newSubjectName) as TextView
             textView.text = intent.getStringExtra("subjectName")
-//            color = intent.getIntExtra("color", -1)
-            //Нужно как-то исправить...
-            palette.setSelectedColor(resources.getColor(R.color.red))
-            color = resources.getColor(R.color.red)
+            val colorsFromRes = resources.getIntArray(R.array.demo_colors)
+            color = intent.getIntExtra("color", -1)
+            palette.setSelectedColor(colorsFromRes[idsOfColors.indexOf(color)])
         }
 
     }
@@ -73,18 +72,17 @@ class AddNewSubjectActivity : AppCompatActivity() {
                                                               intent.getIntExtra("termID", -1))
                         //Возвращаемся к subjectsInTermActvity
                         Toast.makeText(this, "Why we still here?", Toast.LENGTH_SHORT).show()
-                        finish()
                     } else {
                         DBHelper(this).updateSubjects(intent.getIntExtra("subjectID", -1),
                                                               findViewById<EditText>(R.id.newSubjectName).text.toString(),
                                                               color,
                                                               intent.getIntExtra("termID", -1))
-                        finish()
                     }
+                    //Возвращаемся к subjectsInTermActivity
+                    Toast.makeText(this, "Еще одна пара по МБП...", Toast.LENGTH_SHORT).show()
+                    finish()
                 }
-                //Возвращаемся к subjectsInTermActivity
-                Toast.makeText(this, "Еще одна пара по МБП...", Toast.LENGTH_SHORT).show()
-                finish()
+
             }
             android.R.id.home ->{
                 finish()

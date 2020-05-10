@@ -111,8 +111,8 @@ class DBHelper(context: Context)
             put("subject_id", subject_id)
             put("type", type)
             put("position", position)
-            put("start_date", start_date.toString())
-            put("end_date", end_date.toString())
+            put("start_date", SimpleDateFormat("dd.MM.yyyy").format(start_date)/*start_date.toString()*/)
+            put("end_date", SimpleDateFormat("dd.MM.yyyy").format(end_date)/*end_date.toString()*/)
             put("week_day", week_day)
             put("repeat_type", repeat_type)
             put("repeat_freq", repeat_freq)
@@ -223,8 +223,8 @@ class DBHelper(context: Context)
                 request.getString(sDatColIdx),
                 request.getString(eDatColIdx),
                 request.getInt(wDayColIdx),
-                request.getString(rTypeColIdx),
-                request.getString(rFreqColIdx)
+                request.getInt(rTypeColIdx),
+                request.getInt(rFreqColIdx)
                 )
         }
         return null
@@ -346,8 +346,8 @@ class DBHelper(context: Context)
                     request.getString(sDatColIdx),
                     request.getString(eDatColIdx),
                     request.getInt(wDayColIdx),
-                    request.getString(rTypeColIdx),
-                    request.getString(rFreqColIdx)
+                    request.getInt(rTypeColIdx),
+                    request.getInt(rFreqColIdx)
                     )
                 )
             }
@@ -503,8 +503,8 @@ class DBHelper(context: Context)
             put("subject_id", subject_id)
             put("type", type)
             put("position", position)
-            put("start_date", start_date.toString())
-            put("end_date", end_date.toString())
+            put("start_date", SimpleDateFormat("dd.MM.yyyy").format(start_date))
+            put("end_date", SimpleDateFormat("dd.MM.yyyy").format(end_date))
             put("week_day", week_day)
             put("repeat_type", repeat_type)
             put("repeat_freq", repeat_freq)

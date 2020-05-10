@@ -82,8 +82,8 @@ class AddNewTermActivity : AppCompatActivity() {
                     val startDate = SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString())
                     val endDate = SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString())
                     db.updateTerm(intent.getIntExtra("termID", -1), findViewById<EditText>(R.id.termName).text.toString(), startDate, endDate)
+                    finish()
                 }
-                finish()
             }
             android.R.id.home ->{
                 finish()
