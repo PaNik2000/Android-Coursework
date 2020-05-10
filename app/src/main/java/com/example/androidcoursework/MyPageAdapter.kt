@@ -1,14 +1,17 @@
 package com.example.androidcoursework
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-//TODO Исправить ошибку с отображением в ViewPager
-
 class MyPageAdapter(val fm: FragmentManager) :
     FragmentPagerAdapter(fm) {
+
+    val SCHEDULE_POSITION = 0
+    val TERM_POSITION = 1
+    val TEACHER_POSITION = 2
+
+    val FRAGMENT_COUNT = 3
 
     private val scheduleFragment = ScheduleFragment()
     private val termFragment = TermFragment()
@@ -17,13 +20,13 @@ class MyPageAdapter(val fm: FragmentManager) :
     override fun getItem(position: Int): Fragment {
         val fragment : Fragment
         when (position) {
-            0 -> {
+            SCHEDULE_POSITION -> {
                 fragment = scheduleFragment
             }
-            1 -> {
+            TERM_POSITION -> {
                 fragment = termFragment
             }
-            2 -> {
+            TEACHER_POSITION -> {
                 fragment = teacherFragment
             }
             else -> {
@@ -31,13 +34,28 @@ class MyPageAdapter(val fm: FragmentManager) :
             }
         }
 
-        Log.d("abc", "get item $position")
-
         return fragment
     }
 
     override fun getCount(): Int {
-        return 3
+        return FRAGMENT_COUNT
+    }
+
+    override fun getPageTitle(position: Int): CharSequence? {
+        when (position) {
+            SCHEDULE_POSITION -> {
+                return "Schedule"
+            }
+            TERM_POSITION -> {
+                return "Term"
+            }
+            TEACHER_POSITION -> {
+                return "Teacher"
+            }
+            else -> {
+                return "Error"
+            }
+        }
     }
 
     fun removeFragments() {
