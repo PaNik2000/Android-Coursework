@@ -27,10 +27,12 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.navigation_calendar -> {
                         plannerFragment.removeFragments()
+                        if (todayFragment.isAdded) todayFragment.removeFragments()
                         loadFragment(calendarFragment)
                         return true
                     }
                     R.id.navigation_planner -> {
+                        if (todayFragment.isAdded) todayFragment.removeFragments()
                         loadFragment(plannerFragment)
                         return true
                     }

@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.viewpager.widget.ViewPager
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:text="Здесь могла быть ваша реклама"
-        android:textSize="24sp"/>
-
-</LinearLayout>
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:id="@+id/todayViewPager">
+    <androidx.viewpager.widget.PagerTitleStrip
+        android:id="@+id/pagerTitleStrip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top" />
+</androidx.viewpager.widget.ViewPager>

@@ -9,28 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 
-// TODO Использовать класс для занятий из другого активити
-class TempClass(val id : Int, val subjectId : Int, val type : String, val position : Int,
-                val startDate : Calendar, val endDate : Calendar, val weekDay : Int, val repeatType : Int,
-                val repeatFreq : Int, val teacherId : Int)
-
-class TimeClassComparator() : Comparator<TempClass> {
-    override fun compare(o1: TempClass?, o2: TempClass?): Int {
-        if (o1!!.position < o2!!.position) return -1
-        if (o1.position > o2.position) return 1
-        return 0
-    }
-
-}
-
 class CalendarFragment : Fragment() {
 
-    private val currentClasses = ArrayList<TempClass>() // Список тех занятий, что мы отображаем
-    val DBList = ArrayList<TempClass>()                 // Список всех занятий из БД
+    private val currentClasses = ArrayList<MyClass>() // Список тех занятий, что мы отображаем
+    val DBList = ArrayList<MyClass>()                 // Список всех занятий из БД
     lateinit var adapter : CalendarListAdapter
     val currentDate = Calendar.getInstance()            // Текущая выбранная дата в календаре
 
@@ -52,16 +39,25 @@ class CalendarFragment : Fragment() {
         // Временно записал даты начала и конца занятий
         val date1 = Calendar.getInstance()
         date1.set(2020, 1, 2)
+        val strDate1 = date1.get(Calendar.DAY_OF_MONTH).toString() + "." +
+                (date1.get(Calendar.MONTH) + 1).toString() + "." +
+                date1.get(Calendar.YEAR).toString()
         val date2 = Calendar.getInstance()
         date2.set(2020, 1, 9)
+        val strDate2 = date2.get(Calendar.DAY_OF_MONTH).toString() + "." +
+                (date2.get(Calendar.MONTH) + 1).toString() + "." +
+                date2.get(Calendar.YEAR).toString()
         val date3 = Calendar.getInstance()
         date3.set(2020, 4, 30)
+        val strDate3 = date3.get(Calendar.DAY_OF_MONTH).toString() + "." +
+                (date3.get(Calendar.MONTH) + 1).toString() + "." +
+                date3.get(Calendar.YEAR).toString()
 
         // TODO Вставить выборку из БД
         DBList.clear()
-        DBList.add(TempClass(1, 1, "Lecture", 2, date1, date3, 10000, 1, 1, 1))
-        DBList.add(TempClass(2, 1, "Practice", 1, date1, date3, 10000, 1, 2, 1))
-        DBList.add(TempClass(3, 2, "Lecture", 1, date2, date3, 1000000, 1, 2, 3))
+        DBList.add(MyClass(1, 1, 2, 1, "Lecture", strDate1, strDate3, 10000, "1", "1"))
+        DBList.add(MyClass(2, 1, 1, 1, "Practice", strDate1, strDate3, 10000, "1", "2"))
+        DBList.add(MyClass(3, 2, 1, 3, "Lecture", strDate2, strDate3, 1000000, "1", "2"))
 
         calendarView.setOnDateChangeListener(object : CalendarView.OnDateChangeListener{
             override fun onSelectedDayChange(
@@ -71,47 +67,62 @@ class CalendarFragment : Fragment() {
                 dayOfMonth: Int
             ) {
                 currentClasses.clear()
-                currentDate.set(year, month, dayOfMonth)
+                currentDate.set(year, month, dayOfMonth, 0, 0)
 
                 for (clas in DBList) {
-                    if (clas.endDate.before(currentDate)) {
+                    if (SimpleDateFormat("dd.MM.yyyy").parse(clas.endDate).before(currentDate.time)) {
                         continue
                     }
 
                     val firstClass = Calendar.getInstance()
-                    firstClass.set(clas.startDate.get(Calendar.YEAR), clas.startDate.get(Calendar.MONTH), clas.startDate.get(Calendar.DAY_OF_MONTH))
+                    firstClass.time = SimpleDateFormat("dd.MM.yyyy").parse(clas.startDate)
 
-                    val dayOfWeek = ArrayList<Int>()
-                    var weekDay = clas.weekDay
-                    if (weekDay % 10 == 1) dayOfWeek.add(Calendar.SUNDAY)
-                    weekDay /= 10
-                    if (weekDay % 10 == 1) dayOfWeek.add(Calendar.SATURDAY)
-                    weekDay /= 10
-                    if (weekDay % 10 == 1) dayOfWeek.add(Calendar.FRIDAY)
-                    weekDay /= 10
-                    if (weekDay % 10 == 1) dayOfWeek.add(Calendar.THURSDAY)
-                    weekDay /= 10
-                    if (weekDay % 10 == 1) dayOfWeek.add(Calendar.WEDNESDAY)
-                    weekDay /= 10
-                    if (weekDay % 10 == 1) dayOfWeek.add(Calendar.TUESDAY)
-                    weekDay /= 10
-                    if (weekDay % 10 == 1) dayOfWeek.add(Calendar.MONDAY)
+                    if (clas.repeatType == "1") {
+                        val dayOfWeek = ArrayList<Int>()
+                        var weekDay = clas.weekDay
+                        if (weekDay % 10 == 1) dayOfWeek.add(Calendar.SUNDAY)
+                        weekDay /= 10
+                        if (weekDay % 10 == 1) dayOfWeek.add(Calendar.SATURDAY)
+                        weekDay /= 10
+                        if (weekDay % 10 == 1) dayOfWeek.add(Calendar.FRIDAY)
+                        weekDay /= 10
+                        if (weekDay % 10 == 1) dayOfWeek.add(Calendar.THURSDAY)
+                        weekDay /= 10
+                        if (weekDay % 10 == 1) dayOfWeek.add(Calendar.WEDNESDAY)
+                        weekDay /= 10
+                        if (weekDay % 10 == 1) dayOfWeek.add(Calendar.TUESDAY)
+                        weekDay /= 10
+                        if (weekDay % 10 == 1) dayOfWeek.add(Calendar.MONDAY)
 
-                    while (true) {
-                        if (dayOfWeek.contains(firstClass.get(Calendar.DAY_OF_WEEK))) {
-                            break
+                        while (true) {
+                            if (dayOfWeek.contains(firstClass.get(Calendar.DAY_OF_WEEK))) {
+                                break
+                            }
+                            firstClass.add(Calendar.DAY_OF_MONTH, 1)
                         }
-                        firstClass.add(Calendar.DAY_OF_MONTH, 1)
-                    }
 
-                    val diff = currentDate.timeInMillis - firstClass.timeInMillis
-                    val dayCount = diff/ (24 * 60 * 60 * 1000)
-
-                    if (clas.repeatType == 1 && dayCount % (clas.repeatFreq * 7) == 0L) {
-                        currentClasses.add(clas)
+                        while(true) {
+                            if (currentDate.get(Calendar.YEAR) == firstClass.get(Calendar.YEAR) &&
+                                currentDate.get(Calendar.MONTH) == firstClass.get(Calendar.MONTH) &&
+                                currentDate.get(Calendar.DAY_OF_MONTH) == firstClass.get(Calendar.DAY_OF_MONTH)) {
+                                currentClasses.add(clas)
+                                break
+                            }
+                            if (firstClass.after(currentDate)) break
+                            firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq.toInt() * 7)
+                        }
                     }
-                    else if (clas.repeatType == 2 && dayCount % clas.repeatFreq == 0L) {
-                        currentClasses.add(clas)
+                    else {
+                        while(true) {
+                            if (currentDate.get(Calendar.YEAR) == firstClass.get(Calendar.YEAR) &&
+                                currentDate.get(Calendar.MONTH) == firstClass.get(Calendar.MONTH) &&
+                                currentDate.get(Calendar.DAY_OF_MONTH) == firstClass.get(Calendar.DAY_OF_MONTH)) {
+                                currentClasses.add(clas)
+                                break
+                            }
+                            if (firstClass.after(currentDate)) break
+                            firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq.toInt())
+                        }
                     }
                 }
 
@@ -133,44 +144,59 @@ class CalendarFragment : Fragment() {
         currentClasses.clear()
 
         for (clas in DBList) {
-            if (clas.endDate.before(currentDate)) {
+            if (SimpleDateFormat("dd.MM.yyyy").parse(clas.endDate).before(currentDate.time)) {
                 continue
             }
 
             val firstClass = Calendar.getInstance()
-            firstClass.set(clas.startDate.get(Calendar.YEAR), clas.startDate.get(Calendar.MONTH), clas.startDate.get(Calendar.DAY_OF_MONTH))
+            firstClass.time = SimpleDateFormat("dd.MM.yyyy").parse(clas.startDate)
 
-            val dayOfWeek = ArrayList<Int>()
-            var weekDay = clas.weekDay
-            if (weekDay % 10 == 1) dayOfWeek.add(Calendar.SUNDAY)
-            weekDay /= 10
-            if (weekDay % 10 == 1) dayOfWeek.add(Calendar.SATURDAY)
-            weekDay /= 10
-            if (weekDay % 10 == 1) dayOfWeek.add(Calendar.FRIDAY)
-            weekDay /= 10
-            if (weekDay % 10 == 1) dayOfWeek.add(Calendar.THURSDAY)
-            weekDay /= 10
-            if (weekDay % 10 == 1) dayOfWeek.add(Calendar.WEDNESDAY)
-            weekDay /= 10
-            if (weekDay % 10 == 1) dayOfWeek.add(Calendar.TUESDAY)
-            weekDay /= 10
-            if (weekDay % 10 == 1) dayOfWeek.add(Calendar.MONDAY)
+            if (clas.repeatType == "1") {
+                val dayOfWeek = ArrayList<Int>()
+                var weekDay = clas.weekDay
+                if (weekDay % 10 == 1) dayOfWeek.add(Calendar.SUNDAY)
+                weekDay /= 10
+                if (weekDay % 10 == 1) dayOfWeek.add(Calendar.SATURDAY)
+                weekDay /= 10
+                if (weekDay % 10 == 1) dayOfWeek.add(Calendar.FRIDAY)
+                weekDay /= 10
+                if (weekDay % 10 == 1) dayOfWeek.add(Calendar.THURSDAY)
+                weekDay /= 10
+                if (weekDay % 10 == 1) dayOfWeek.add(Calendar.WEDNESDAY)
+                weekDay /= 10
+                if (weekDay % 10 == 1) dayOfWeek.add(Calendar.TUESDAY)
+                weekDay /= 10
+                if (weekDay % 10 == 1) dayOfWeek.add(Calendar.MONDAY)
 
-            while (true) {
-                if (dayOfWeek.contains(firstClass.get(Calendar.DAY_OF_WEEK))) {
-                    break
+                while (true) {
+                    if (dayOfWeek.contains(firstClass.get(Calendar.DAY_OF_WEEK))) {
+                        break
+                    }
+                    firstClass.add(Calendar.DAY_OF_MONTH, 1)
                 }
-                firstClass.add(Calendar.DAY_OF_MONTH, 1)
-            }
 
-            val diff = currentDate.timeInMillis - firstClass.timeInMillis
-            val dayCount = diff/ (24 * 60 * 60 * 1000)
-
-            if (clas.repeatType == 1 && dayCount % (clas.repeatFreq * 7) == 0L) {
-                currentClasses.add(clas)
+                while(true) {
+                    if (currentDate.get(Calendar.YEAR) == firstClass.get(Calendar.YEAR) &&
+                        currentDate.get(Calendar.MONTH) == firstClass.get(Calendar.MONTH) &&
+                        currentDate.get(Calendar.DAY_OF_MONTH) == firstClass.get(Calendar.DAY_OF_MONTH)) {
+                        currentClasses.add(clas)
+                        break
+                    }
+                    if (firstClass.after(currentDate)) break
+                    firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq.toInt() * 7)
+                }
             }
-            else if (clas.repeatType == 2 && dayCount % clas.repeatFreq == 0L) {
-                currentClasses.add(clas)
+            else {
+                while(true) {
+                    if (currentDate.get(Calendar.YEAR) == firstClass.get(Calendar.YEAR) &&
+                        currentDate.get(Calendar.MONTH) == firstClass.get(Calendar.MONTH) &&
+                        currentDate.get(Calendar.DAY_OF_MONTH) == firstClass.get(Calendar.DAY_OF_MONTH)) {
+                        currentClasses.add(clas)
+                        break
+                    }
+                    if (firstClass.after(currentDate)) break
+                    firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq.toInt())
+                }
             }
         }
 
@@ -180,7 +206,7 @@ class CalendarFragment : Fragment() {
 
 }
 
-class CalendarListAdapter(context : Context, val resource: Int, objects: MutableList<TempClass>) : ArrayAdapter<TempClass>(context, resource, objects) {
+class CalendarListAdapter(context : Context, val resource: Int, objects: MutableList<MyClass>) : ArrayAdapter<MyClass>(context, resource, objects) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val clas = getItem(position)
         var view = convertView
@@ -193,10 +219,10 @@ class CalendarListAdapter(context : Context, val resource: Int, objects: Mutable
         val drawable = context.resources.getDrawable(R.drawable.blue)
 
         // TODO Вставка названия предмета и имени преподавателя в соответсвии с id
-        (view?.findViewById(R.id.calendarListPosition) as TextView).text = clas?.position.toString()
+        (view?.findViewById(R.id.calendarListPosition) as TextView).text = clas?.scheduleID.toString()
         (view.findViewById(R.id.calendarListColor) as View).background = drawable
-        (view.findViewById(R.id.calendarListSubjType) as TextView).text = clas?.subjectId.toString() + " " + clas?.type
-        (view.findViewById(R.id.calendarListTeacher) as TextView).text = clas?.teacherId.toString()
+        (view.findViewById(R.id.calendarListSubjType) as TextView).text = clas?.subjectID.toString() + " " + clas?.type
+        (view.findViewById(R.id.calendarListTeacher) as TextView).text = clas?.teacherID.toString()
 
         return view
     }
