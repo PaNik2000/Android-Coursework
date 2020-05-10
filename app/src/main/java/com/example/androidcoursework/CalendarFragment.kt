@@ -1,9 +1,7 @@
 package com.example.androidcoursework
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +9,6 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.Comparator
 import kotlin.collections.ArrayList
 
 class CalendarFragment : Fragment() {
@@ -21,17 +18,13 @@ class CalendarFragment : Fragment() {
     lateinit var adapter : CalendarListAdapter
     val currentDate = Calendar.getInstance()            // Текущая выбранная дата в календаре
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        adapter = CalendarListAdapter(activity as Context, R.layout.calendar_list_element, currentClasses)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_calendar, container, false)
+        adapter = CalendarListAdapter(activity as Context, R.layout.calendar_list_element, currentClasses)
 
         val calendarView = view.findViewById(R.id.calendarView) as CalendarView
         val listView = view.findViewById(R.id.calendarList) as ListView
@@ -55,9 +48,9 @@ class CalendarFragment : Fragment() {
 
         // TODO Вставить выборку из БД
         DBList.clear()
-        DBList.add(MyClass(1, 1, 2, 1, "Lecture", strDate1, strDate3, 10000, "1", "1"))
-        DBList.add(MyClass(2, 1, 1, 1, "Practice", strDate1, strDate3, 10000, "1", "2"))
-        DBList.add(MyClass(3, 2, 1, 3, "Lecture", strDate2, strDate3, 1000000, "1", "2"))
+        DBList.add(MyClass(1, 1, 2, 1, "Lecture", strDate1, strDate3, 10000, RepeatTypes.WEEK.TYPE, 1))
+        DBList.add(MyClass(2, 1, 1, 1, "Practice", strDate1, strDate3, 10000, RepeatTypes.WEEK.TYPE, 2))
+        DBList.add(MyClass(3, 2, 1, 3, "Lecture", strDate2, strDate3, 1000000, RepeatTypes.WEEK.TYPE, 2))
 
         calendarView.setOnDateChangeListener(object : CalendarView.OnDateChangeListener{
             override fun onSelectedDayChange(
@@ -77,7 +70,7 @@ class CalendarFragment : Fragment() {
                     val firstClass = Calendar.getInstance()
                     firstClass.time = SimpleDateFormat("dd.MM.yyyy").parse(clas.startDate)
 
-                    if (clas.repeatType == "1") {
+                    if (clas.repeatType == RepeatTypes.WEEK.TYPE) {
                         val dayOfWeek = ArrayList<Int>()
                         var weekDay = clas.weekDay
                         if (weekDay % 10 == 1) dayOfWeek.add(Calendar.SUNDAY)
@@ -151,7 +144,7 @@ class CalendarFragment : Fragment() {
             val firstClass = Calendar.getInstance()
             firstClass.time = SimpleDateFormat("dd.MM.yyyy").parse(clas.startDate)
 
-            if (clas.repeatType == "1") {
+            if (clas.repeatType == RepeatTypes.WEEK.TYPE) {
                 val dayOfWeek = ArrayList<Int>()
                 var weekDay = clas.weekDay
                 if (weekDay % 10 == 1) dayOfWeek.add(Calendar.SUNDAY)

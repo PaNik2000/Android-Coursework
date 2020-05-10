@@ -48,9 +48,9 @@ class DayFragment(val date : Calendar) : Fragment() {
 
         // TODO Вставить выборку из БД
         DBList.clear()
-        DBList.add(MyClass(1, 1, 2, 1, "Lecture", strDate1, strDate3, 10000, "1", "1"))
-        DBList.add(MyClass(2, 1, 1, 1, "Practice", strDate1, strDate3, 10000, "1", "2"))
-        DBList.add(MyClass(3, 2, 1, 3, "Lecture", strDate2, strDate3, 1000000, "1", "2"))
+        DBList.add(MyClass(1, 1, 2, 1, "Lecture", strDate1, strDate3, 10000, RepeatTypes.WEEK.TYPE, 1))
+        DBList.add(MyClass(2, 1, 1, 1, "Practice", strDate1, strDate3, 10000, RepeatTypes.WEEK.TYPE, 2))
+        DBList.add(MyClass(3, 2, 1, 3, "Lecture", strDate2, strDate3, 1000000, RepeatTypes.WEEK.TYPE, 2))
 
         for (clas in DBList) {
 
@@ -61,7 +61,7 @@ class DayFragment(val date : Calendar) : Fragment() {
             val firstClass = Calendar.getInstance()
             firstClass.time = SimpleDateFormat("dd.MM.yyyy").parse(clas.startDate)
 
-            if (clas.repeatType == "1") {
+            if (clas.repeatType == RepeatTypes.WEEK.TYPE) {
                 val dayOfWeek = ArrayList<Int>()
                 var weekDay = clas.weekDay
                 if (weekDay % 10 == 1) dayOfWeek.add(Calendar.SUNDAY)

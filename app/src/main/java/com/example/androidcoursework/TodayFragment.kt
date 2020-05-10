@@ -16,28 +16,33 @@ class TodayFragment : Fragment(){
 
     lateinit var myAdapter : TodayPagerAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        myAdapter = TodayPagerAdapter(requireActivity().supportFragmentManager)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_today, container, false)
+        myAdapter = TodayPagerAdapter(requireActivity().supportFragmentManager)
         (view.findViewById(R.id.todayViewPager) as ViewPager).adapter = myAdapter
 
         val beginDate = Calendar.getInstance()
-        beginDate.set(2015, 0, 1, 0, 0)
+        beginDate.set(TodayPagerAdapter.BEGIN_YEAR, TodayPagerAdapter.BEGIN_MONTH, TodayPagerAdapter.BEGIN_DAY)
         val endDate = Calendar.getInstance()
-        endDate.set(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH), 0, 0)
+        endDate.set(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH))
 
-        val diff = endDate.timeInMillis - beginDate.timeInMillis
-        val dayCount = diff / (24 * 60 * 60 * 1000)
 
-        (view.findViewById(R.id.todayViewPager) as ViewPager).currentItem = dayCount.toInt()
+        var dayCount = 0
+        while(true) {
+            if (beginDate.get(Calendar.YEAR) == endDate.get(Calendar.YEAR) &&
+                beginDate.get(Calendar.MONTH) == endDate.get(Calendar.MONTH) &&
+                beginDate.get(Calendar.DAY_OF_MONTH) == endDate.get(Calendar.DAY_OF_MONTH)) {
+                break
+            }
+            beginDate.add(Calendar.DAY_OF_MONTH, 1)
+            dayCount++
+        }
+
+        (view.findViewById(R.id.todayViewPager) as ViewPager).currentItem = dayCount
 
         return view
     }
@@ -49,16 +54,26 @@ class TodayFragment : Fragment(){
 
 class TodayPagerAdapter(val fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
+    companion object {
+        const val BEGIN_YEAR = 2015
+        const val BEGIN_MONTH = Calendar.JANUARY
+        const val BEGIN_DAY = 1
+
+        const val END_YEAR = 2030
+        const val END_MONTH = Calendar.JANUARY
+        const val END_DAY = 1
+    }
+
     val fragments = ArrayList<Fragment>()
 
     override fun getItem(position: Int): Fragment {
         val fragment : Fragment
-        val temp = Calendar.getInstance()
-        temp.set(2015, 0, 1, 0, 0)
+        val date = Calendar.getInstance()
+        date.set(BEGIN_YEAR, BEGIN_MONTH, BEGIN_DAY)
 
-        temp.add(Calendar.DAY_OF_MONTH, position)
+        date.add(Calendar.DAY_OF_MONTH, position)
 
-        fragment = DayFragment(temp)
+        fragment = DayFragment(date)
         fragments.add(fragment)
 
         return fragment
@@ -66,27 +81,33 @@ class TodayPagerAdapter(val fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getCount(): Int {
         val beginDate = Calendar.getInstance()
-        beginDate.set(2015, 0, 1, 0, 0)
+        beginDate.set(BEGIN_YEAR, BEGIN_MONTH, BEGIN_DAY)
         val endDate = Calendar.getInstance()
-        endDate.set(2030, 0, 1, 0, 0)
+        endDate.set(END_YEAR, END_MONTH, END_DAY)
 
-        val diff = endDate.timeInMillis - beginDate.timeInMillis
-        val dayCount = diff / (24 * 60 * 60 * 1000)
+        var dayCount = 0
+        while(true) {
+            if (beginDate.get(Calendar.YEAR) == endDate.get(Calendar.YEAR) &&
+                beginDate.get(Calendar.MONTH) == endDate.get(Calendar.MONTH) &&
+                beginDate.get(Calendar.DAY_OF_MONTH) == endDate.get(Calendar.DAY_OF_MONTH)) {
+                break
+            }
+            beginDate.add(Calendar.DAY_OF_MONTH, 1)
+            dayCount++
+        }
 
-        return dayCount.toInt()
+        return dayCount
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
         val date = Calendar.getInstance()
-        date.set(2015, 0, 1, 0, 0)
+        date.set(BEGIN_YEAR, BEGIN_MONTH, BEGIN_DAY)
 
         date.add(Calendar.DAY_OF_MONTH, position)
 
-        val str = date.get(Calendar.DAY_OF_MONTH).toString() +
+        return date.get(Calendar.DAY_OF_MONTH).toString() +
                 "." + (date.get(Calendar.MONTH) + 1).toString() +
                 "." + date.get(Calendar.YEAR).toString()
-
-        return str
     }
 
     fun removeFragments() {

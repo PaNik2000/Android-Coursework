@@ -27,20 +27,20 @@ class MainActivity : AppCompatActivity() {
                 when (item.getItemId()) {
                     R.id.navigation_today -> {
                         plannerFragment.removeFragments()
-                        supportActionBar?.title = "Today"
+                        supportActionBar?.title = getString(R.string.title_today)
                         loadFragment(todayFragment)
                         return true
                     }
                     R.id.navigation_calendar -> {
                         plannerFragment.removeFragments()
                         if (todayFragment.isAdded) todayFragment.removeFragments()
-                        supportActionBar?.title = "Calendar"
+                        supportActionBar?.title = getString(R.string.title_calendar)
                         loadFragment(calendarFragment)
                         return true
                     }
                     R.id.navigation_planner -> {
                         if (todayFragment.isAdded) todayFragment.removeFragments()
-                        supportActionBar?.title = "Planner"
+                        supportActionBar?.title = getString(R.string.title_planner)
                         loadFragment(plannerFragment)
                         return true
                     }
