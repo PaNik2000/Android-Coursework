@@ -8,9 +8,9 @@
     <View
         android:id="@+id/classColor"
         android:layout_margin="10dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"/>
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Лекция"
-                android:textSize="25dp"/>
+                android:textSize="22dp"/>
 
             <TextView
                 android:id="@+id/teacherID"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:text="Дехуров Ш.О."
-                android:textSize="25dp"/>
+                android:textSize="22dp"/>
 
         </LinearLayout>
 

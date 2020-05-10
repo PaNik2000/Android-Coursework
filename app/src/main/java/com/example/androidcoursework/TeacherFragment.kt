@@ -16,7 +16,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class TeacherFragment : Fragment() {
 
-    private val teacherList = ArrayList<String>()
+    lateinit var teacherList: MutableList<Teacher>
+    lateinit var listView: ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,23 +28,18 @@ class TeacherFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("abc", "teacher fragment")
 
         val view = inflater.inflate(R.layout.fragment_teacher, container, false)
 
-        val listView = view.findViewById(R.id.teacherList) as ListView
-
-        if (teacherList.isEmpty()) {
-            teacherList.add("Берков Николай Андреевич")
-            teacherList.add("Платонова Ольга Владимировна")
-            teacherList.add("Оамохин Гелс РоманоВИЧ")
-        }
+        listView = view.findViewById(R.id.teacherList) as ListView
+        teacherList = DBHelper(activity as Context).getTeachers()
 
         listView.adapter = TeacherListAdapter(activity as Context, R.layout.teacher_list_element, teacherList)
         listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
                 val intentToAddTeacher = Intent(activity, AddNewTeacherActivity::class.java)
                 intentToAddTeacher.putExtra("Create or change", "change")
+                intentToAddTeacher.putExtra("teacherID", teacherList[position].ID)
                 startActivity(intentToAddTeacher)
             }
         })
@@ -59,20 +55,26 @@ class TeacherFragment : Fragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        teacherList = DBHelper(activity as Context).getTeachers()
+        listView.adapter = TeacherListAdapter(activity as Context, R.layout.teacher_list_element, teacherList)
+    }
+
 }
 
-class TeacherListAdapter(context : Context, val resource: Int, objects: MutableList<String>)
-    : ArrayAdapter<String>(context, resource, objects){
+class TeacherListAdapter(context : Context, val resource: Int, objects: MutableList<Teacher>)
+    : ArrayAdapter<Teacher>(context, resource, objects){
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val schedule = getItem(position)
+        val lilTicha = getItem(position)
         var view = convertView
 
         if (view == null) {
             view = LayoutInflater.from(context).inflate(resource, null)
         }
 
-        (view?.findViewById(R.id.teacherName) as TextView).text = schedule
+        (view?.findViewById(R.id.teacherName) as TextView).text = lilTicha?.name
 
         return view
     }

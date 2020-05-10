@@ -18,7 +18,6 @@ class TermFragment : Fragment() {
 
     lateinit var termList: MutableList<Term>
     lateinit var listView: ListView
-//    val db = DBHelper(activity as Context)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,28 +28,12 @@ class TermFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("abc", "term fragment")
 
         val view = inflater.inflate(R.layout.fragment_term, container, false)
         listView = view.findViewById(R.id.termList) as ListView
 
         //Получаем все term'ы
         termList = DBHelper(activity as Context).getTerm()
-
-        //Это потом не понадобится /////////////////
-//        val start = Calendar.getInstance()
-//        val end = Calendar.getInstance()
-//        val start2 = Calendar.getInstance()
-//        val end2 = Calendar.getInstance()
-//        start.set(2019, Calendar.FEBRUARY, 1)
-//        end.set(2019, Calendar.MAY, 31)
-//        termList.add(TermInfo("1 term", start, end))
-//        start2.set(2019, Calendar.SEPTEMBER, 1)
-//        end2.set(2019, Calendar.DECEMBER, 31)
-//        termList.add(TermInfo("2 term", start2, end2))
-        ////////////////////////////////////////////////////
-
-        Log.d("abc", termList.size.toString())
 
         listView.adapter = TermListAdapter(activity as Context, R.layout.term_list_element, termList)
         listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
@@ -73,7 +56,6 @@ class TermFragment : Fragment() {
         super.onResume()
         termList = DBHelper(activity as Context).getTerm()
         listView.adapter = TermListAdapter(activity as Context, R.layout.term_list_element, termList)
-        Log.d("term", "onResume")
     }
 
 }

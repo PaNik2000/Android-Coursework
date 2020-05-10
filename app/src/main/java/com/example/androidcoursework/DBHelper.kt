@@ -172,6 +172,7 @@ class DBHelper(context: Context)
     fun insertTeachers(name: String)
     {
         Log.d(LOG_TAG, "--- insertTeachers ---")
+        Log.d("ttt", name)
         val record = ContentValues()
         with(record)
         {

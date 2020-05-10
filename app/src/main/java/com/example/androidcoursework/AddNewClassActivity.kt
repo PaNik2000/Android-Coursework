@@ -17,13 +17,15 @@ import kotlinx.android.synthetic.main.activity_add_new_class.*
 import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class AddNewClassActivity : AppCompatActivity() {
 
     lateinit var toolbar : Toolbar
-    //Заполнить их из БД
+    //Заполнить из БД
     var classNumberValues = arrayOf("1 пара", "2 пара", "3 пара", "4 пара", "5 пара")
-    var teachers = arrayOf("Первый преподаватель", "Второй преподаватель", "Третий преподаватель", "Четвертый преподаватель", "Пятый преподаватель", "Шестой преподаватель")
+    lateinit var teachers: MutableList<Teacher>
+    lateinit var teacherNames: ArrayList<String>
 
     lateinit var typeClass: EditText
     lateinit var mStartDate : TextView
@@ -65,8 +67,12 @@ class AddNewClassActivity : AppCompatActivity() {
             prompt = "Select number of the class"
             gravity = Gravity.CENTER
         }
-        //Получить список всех учителей | getTeachers()
-        aa = ArrayAdapter(this, R.layout.my_simple_spinner_item, teachers)
+        //Заполнение спиннера учителей
+        teachers = dbHelper.getTeachers()
+        teacherNames = ArrayList<String>()
+        for(teacher in teachers)
+            teacherNames.add(teacher.name)
+        aa = ArrayAdapter(this, R.layout.my_simple_spinner_item, teacherNames)
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         with(editTeacher){
             adapter = aa
@@ -105,7 +111,7 @@ class AddNewClassActivity : AppCompatActivity() {
             mEndDate.text = dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.endDate
             frequencySpinner.setSelection(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.repeatFreq)
             repeatSpinner.setSelection(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.repeatType)
-            teacherSpinner.setSelection(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.teacherID)
+            teacherSpinner.setSelection(teacherNames.indexOf(dbHelper.getTeachersById(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.teacherID)?.name))
 
             var weekDay = dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.weekDay
             if(weekDay/1000000 == 1) findViewById<ToggleButton>(R.id.monday).isChecked = true
@@ -156,7 +162,7 @@ class AddNewClassActivity : AppCompatActivity() {
                 }
 
                 if(createNewClass) {
-                    if (findViewById<EditText>(R.id.editTypeClass).text.isEmpty()) {
+                    if (typeClass.text.isEmpty()) {
                         Toast.makeText(this, "Fill in the gaps!", Toast.LENGTH_SHORT).show()
                     } else if (weekDay == 0 && weekSelected) {
                         Toast.makeText(this, "Choose the day of a week!", Toast.LENGTH_SHORT).show()
@@ -169,12 +175,14 @@ class AddNewClassActivity : AppCompatActivity() {
                             weekDay,
                             if ((repeatSpinner.selectedItemPosition == 0)) RepeatTypes.DAY.TYPE else RepeatTypes.WEEK.TYPE,
                             frequencySpinner.selectedItemPosition,
-                            teacherSpinner.selectedItemPosition/*Какой teacherID нужен?*/)
+                            teachers.elementAt(teacherSpinner.selectedItemPosition).ID)
                         finish()
                     }
                 } else {
-                    if(weekDay == 0 && weekSelected){
+                    if(typeClass.text.isEmpty())
                         Toast.makeText(this, "Fill in the gaps!", Toast.LENGTH_SHORT).show()
+                    if(weekDay == 0 && weekSelected){
+                        Toast.makeText(this, "Choose the day of a week!", Toast.LENGTH_SHORT).show()
                     } else {
                         DBHelper(this).updateClasses(
                             intent.getIntExtra("classID", -1),
@@ -186,7 +194,7 @@ class AddNewClassActivity : AppCompatActivity() {
                             weekDay,
                             repeatSpinner.selectedItemPosition,
                             frequencySpinner.selectedItemPosition,
-                            teacherSpinner.selectedItemPosition
+                            teachers.elementAt(teacherSpinner.selectedItemPosition).ID
                         )
                         Toast.makeText(this, "Я устал", Toast.LENGTH_SHORT).show()
                         finish()
