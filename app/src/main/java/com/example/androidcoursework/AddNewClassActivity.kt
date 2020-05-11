@@ -109,7 +109,7 @@ class AddNewClassActivity : AppCompatActivity() {
             classNumberSpinner.setSelection(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.scheduleID)
             mStartDate.text = dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.startDate
             mEndDate.text = dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.endDate
-            frequencySpinner.setSelection(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.repeatFreq)
+            frequencySpinner.setSelection(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.repeatFreq - 1)
             repeatSpinner.setSelection(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.repeatType)
             teacherSpinner.setSelection(teacherNames.indexOf(dbHelper.getTeachersById(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.teacherID)?.name))
 
@@ -174,7 +174,7 @@ class AddNewClassActivity : AppCompatActivity() {
                             SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString()),
                             weekDay,
                             if ((repeatSpinner.selectedItemPosition == 0)) RepeatTypes.DAY.TYPE else RepeatTypes.WEEK.TYPE,
-                            frequencySpinner.selectedItemPosition,
+                            frequencySpinner.selectedItemPosition + 1,
                             teachers.elementAt(teacherSpinner.selectedItemPosition).ID)
                         finish()
                     }
@@ -193,7 +193,7 @@ class AddNewClassActivity : AppCompatActivity() {
                             SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString()),
                             weekDay,
                             repeatSpinner.selectedItemPosition,
-                            frequencySpinner.selectedItemPosition,
+                            frequencySpinner.selectedItemPosition + 1,
                             teachers.elementAt(teacherSpinner.selectedItemPosition).ID
                         )
                         Toast.makeText(this, "Я устал", Toast.LENGTH_SHORT).show()
