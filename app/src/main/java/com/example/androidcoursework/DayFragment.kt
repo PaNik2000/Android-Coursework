@@ -16,7 +16,8 @@ class DayFragment(val date : Calendar) : Fragment() {
 
     private val currentClasses = ArrayList<MyClass>() // Список тех занятий, что мы отображаем
     val DBList = ArrayList<MyClass>()                 // Список всех занятий из БД
-    lateinit var adapter : DayListAdapter
+    lateinit var adapter : CalendarListAdapter
+    lateinit var dbHelper: DBHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,34 +25,14 @@ class DayFragment(val date : Calendar) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_day, container, false)
+        dbHelper = DBHelper(activity as Context)
 
         currentClasses.clear()
 
         val listView = view.findViewById(R.id.dayList) as ListView
 
-        // Временно записал даты начала и конца занятий
-        val date1 = Calendar.getInstance()
-        date1.set(2020, 1, 2)
-        val strDate1 = date1.get(Calendar.DAY_OF_MONTH).toString() + "." +
-                                (date1.get(Calendar.MONTH) + 1).toString() + "." +
-                                date1.get(Calendar.YEAR).toString()
-        val date2 = Calendar.getInstance()
-        date2.set(2020, 1, 9)
-        val strDate2 = date2.get(Calendar.DAY_OF_MONTH).toString() + "." +
-                (date2.get(Calendar.MONTH) + 1).toString() + "." +
-                date2.get(Calendar.YEAR).toString()
-        val date3 = Calendar.getInstance()
-        date3.set(2020, 4, 30)
-        val strDate3 = date3.get(Calendar.DAY_OF_MONTH).toString() + "." +
-                (date3.get(Calendar.MONTH) + 1).toString() + "." +
-                date3.get(Calendar.YEAR).toString()
-
-        // TODO Вставить выборку из БД
         DBList.clear()
-        DBList.add(MyClass(1, 1, 2, 1, "Lecture", strDate1, strDate3, 10000, RepeatTypes.WEEK.TYPE, 1))
-        DBList.add(MyClass(2, 1, 1, 1, "Practice", strDate1, strDate3, 10000, RepeatTypes.WEEK.TYPE, 2))
-        DBList.add(MyClass(3, 2, 1, 3, "Lecture", strDate2, strDate3, 1000000, RepeatTypes.WEEK.TYPE, 2))
-
+        DBList.addAll(dbHelper.getClasses())
         for (clas in DBList) {
 
             if (SimpleDateFormat("dd.MM.yyyy").parse(clas.endDate).before(date.time)) {
@@ -112,29 +93,8 @@ class DayFragment(val date : Calendar) : Fragment() {
 
         currentClasses.sortWith(TimeClassComparator())
 
-        adapter = DayListAdapter(activity as Context, R.layout.day_list_element, currentClasses)
+        adapter = CalendarListAdapter(activity as Context, R.layout.calendar_list_element, currentClasses)
         listView.adapter = adapter
-
-        return view
-    }
-}
-
-class DayListAdapter(context : Context, val resource: Int, objects: MutableList<MyClass>) : ArrayAdapter<MyClass>(context, resource, objects) {
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val clas = getItem(position)
-        var view = convertView
-
-        if (view == null) {
-            view = LayoutInflater.from(context).inflate(resource, null)
-        }
-
-        // TODO Выбор цвета в соответствии с id цвета
-        val drawable = context.resources.getDrawable(R.drawable.blue)
-
-        // TODO Вставка названия предмета и имени преподавателя в соответсвии с id
-        (view?.findViewById(R.id.dayListColor) as View).background = drawable
-        (view.findViewById(R.id.dayListSubjType) as TextView).text = clas?.subjectID.toString() + " " + clas?.type
-        (view.findViewById(R.id.dayListTeacher) as TextView).text = clas?.teacherID.toString()
 
         return view
     }
