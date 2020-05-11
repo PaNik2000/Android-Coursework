@@ -23,14 +23,15 @@ class AddNewClassActivity : AppCompatActivity() {
 
     lateinit var toolbar : Toolbar
     //Заполнить из БД
-    var classNumberValues = arrayOf("1 пара", "2 пара", "3 пара", "4 пара", "5 пара")
+    lateinit var sortedSchedules: MutableList<Schedule>
+    lateinit var schedulePositions: ArrayList<String>
     lateinit var teachers: MutableList<Teacher>
     lateinit var teacherNames: ArrayList<String>
 
     lateinit var typeClass: EditText
     lateinit var mStartDate : TextView
     lateinit var mEndDate : TextView
-    lateinit var classNumberSpinner: Spinner
+    lateinit var scheduleSpinner: Spinner
     lateinit var frequencySpinner: Spinner
     lateinit var repeatSpinner: Spinner
     lateinit var teacherSpinner: Spinner
@@ -50,7 +51,7 @@ class AddNewClassActivity : AppCompatActivity() {
         mStartDate = findViewById<TextView>(R.id.editStart)
         mEndDate = findViewById<TextView>(R.id.editEnd)
         typeClass = findViewById<EditText>(R.id.editTypeClass)
-        classNumberSpinner = findViewById<Spinner>(R.id.editPositionClass)
+        scheduleSpinner = findViewById<Spinner>(R.id.editPositionClass)
         frequencySpinner = findViewById<Spinner>(R.id.editFreqType)
         repeatSpinner = findViewById<Spinner>(R.id.editRepeatType)
         teacherSpinner = findViewById<Spinner>(R.id.editTeacher)
@@ -59,8 +60,13 @@ class AddNewClassActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
-        //Получить расписание пар по времени | getSchedules()
-        var aa = ArrayAdapter(this, R.layout.my_simple_spinner_item, classNumberValues)
+        //Заполнение спиннера пар
+        sortedSchedules = sortSchedules(dbHelper.getSchedule())
+        schedulePositions = ArrayList<String>()
+        for(schedule in sortedSchedules){
+            schedulePositions.add("${schedule.position} пара")
+        }
+        var aa = ArrayAdapter(this, R.layout.my_simple_spinner_item, schedulePositions)
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         with(editPositionClass){
             adapter = aa
@@ -76,7 +82,7 @@ class AddNewClassActivity : AppCompatActivity() {
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         with(editTeacher){
             adapter = aa
-            prompt = "Select number of the class"
+            prompt = "Teacher"
             gravity = Gravity.CENTER
         }
         //Доступность выбора дня в зависимости от выбранного режима повторения
@@ -106,7 +112,7 @@ class AddNewClassActivity : AppCompatActivity() {
         } else {
             supportActionBar?.title = dbHelper.getSubjectsById(intent.getIntExtra("subjectID", -1))?.name
             typeClass.setText(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))?.type, TextView.BufferType.EDITABLE)
-            classNumberSpinner.setSelection(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.scheduleID)
+            scheduleSpinner.setSelection(schedulePositions.indexOf("${dbHelper.getScheduleById(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.scheduleID)?.position} пара"))
             mStartDate.text = dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.startDate
             mEndDate.text = dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.endDate
             frequencySpinner.setSelection(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.repeatFreq - 1)
@@ -169,7 +175,7 @@ class AddNewClassActivity : AppCompatActivity() {
                     } else {
                         DBHelper(this).insertClasses(intent.getIntExtra("subjectID", -1),
                             typeClass.text.toString(),
-                            classNumberSpinner.selectedItemPosition /*Какой position нужен?*/,
+                            sortedSchedules.elementAt(scheduleSpinner.selectedItemPosition).ID!!,
                             SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString()),
                             SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString()),
                             weekDay,
@@ -188,7 +194,7 @@ class AddNewClassActivity : AppCompatActivity() {
                             intent.getIntExtra("classID", -1),
                             intent.getIntExtra("subjectID", -1),
                             typeClass.text.toString(),
-                            classNumberSpinner.selectedItemPosition,
+                            sortedSchedules.elementAt(scheduleSpinner.selectedItemPosition).ID!!,
                             SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString()),
                             SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString()),
                             weekDay,
@@ -242,5 +248,19 @@ class AddNewClassActivity : AppCompatActivity() {
         cal.time = date
         cal.add(Calendar.MONTH, num)
         return cal.time
+    }
+
+    fun sortSchedules(scheduleList: MutableList<Schedule>) : MutableList<Schedule>{
+        val sortedSchedule = mutableListOf<Schedule>()
+
+        for(i in 1..scheduleList.size){
+            for(schedule in scheduleList){
+                if(schedule.position == i){
+                    sortedSchedule.add(schedule)
+                    break
+                }
+            }
+        }
+        return sortedSchedule
     }
 }

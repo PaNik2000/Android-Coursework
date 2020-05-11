@@ -67,7 +67,6 @@ class ScheduleFragment : Fragment() {
         sortedScheduleList = sortSchedules(scheduleList)
         listView.adapter = ScheduleListAdapter(activity as Context, R.layout.schedule_list_element, sortedScheduleList)
         for(schedule in sortedScheduleList){
-            Log.d("ttt", "ID: ${schedule.ID} pos: ${schedule.position}")
         }
     }
 
@@ -99,7 +98,7 @@ class ScheduleListAdapter(context : Context, val resource: Int, objects: Mutable
         }
 
         (view?.findViewById(R.id.scheduleID) as TextView).text = schedule?.position.toString()
-        (view.findViewById(R.id.scheduleTime) as TextView).text = "${schedule?.startTime} ${schedule?.endTime}"
+        (view.findViewById(R.id.scheduleTime) as TextView).text = "${schedule?.startTime} - ${schedule?.endTime}"
 
         return view
     }

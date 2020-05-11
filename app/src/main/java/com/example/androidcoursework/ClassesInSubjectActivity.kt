@@ -59,7 +59,8 @@ class ClassListAdapter(context : Context, val resource: Int, objects: MutableLis
         (view?.findViewById(R.id.classColor) as View).background = getDrawable(context, colorResources[idsOfColors.indexOf(subject.color)])
         (view?.findViewById(R.id.classType) as TextView).text = mClass?.type
         (view?.findViewById(R.id.teacherID) as TextView).text = DBHelper(context).getTeachersById(mClass!!.teacherID)?.name
-        (view?.findViewById(R.id.positionID) as TextView).text = "1 пара"//"${DBHelper(context).getScheduleById(mClass!!.scheduleID)?.position.toString()} Пара"
+        Log.d("ttt", "${mClass!!.scheduleID}")
+        (view?.findViewById(R.id.positionID) as TextView).text = "${DBHelper(context).getScheduleById(mClass!!.scheduleID)?.position} пара"
         (view?.findViewById(R.id.weekDay) as TextView).text = weekDayStr
 
         return view
