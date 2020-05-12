@@ -99,7 +99,7 @@ class DBHelper(context: Context)
 
     //INSERTS////////////////////////////////////////////////////////////////////////////////////////////
     fun insertClasses(
-        subject_id: Int, type: String, position: Int,
+        subject_id: Int, type: String, position: Int?,
         start_date: Date?, end_date: Date?,
         week_day: Int?, repeat_type: Int?, repeat_freq: Int?,
         teacher_id: Int?
@@ -492,7 +492,7 @@ class DBHelper(context: Context)
 
     fun updateClasses(
         id: Int,
-        subject_id: Int, type: String, position: Int,
+        subject_id: Int, type: String, position: Int?,
         start_date: Date, end_date: Date, week_day: Int,
         repeat_type: Int, repeat_freq: Int,
         teacher_id: Int?

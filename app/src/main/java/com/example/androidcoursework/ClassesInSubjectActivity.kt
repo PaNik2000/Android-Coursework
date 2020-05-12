@@ -27,27 +27,40 @@ class ClassListAdapter(context : Context, val resource: Int, objects: MutableLis
 
         var weekDay = mClass?.weekDay
         var weekDayStr = ""
-        var intArray = IntArray(7)
-        var devider = 1000000
-        for(i in 0..6){
-            intArray[i] = weekDay!!/devider
-            weekDay = weekDay % devider
-            devider = devider / 10
+        if(mClass?.repeatType == RepeatTypes.WEEK.TYPE) {
+            when(mClass.repeatFreq){
+                1 -> { weekDayStr = "Каждую неделю по "}
+                2, 3, 4 -> {weekDayStr = "Каждые ${mClass.repeatFreq} недели по "}
+                else -> { weekDayStr = "Каждые ${mClass.repeatFreq} недель по "}
+            }
+            val intArray = IntArray(7)
+            var devider = 1000000
+            for (i in 0..6) {
+                intArray[i] = weekDay!! / devider
+                weekDay = weekDay % devider
+                devider = devider / 10
+            }
+            if (intArray[0] == 1)
+                weekDayStr += "Пн "
+            if (intArray[1] == 1)
+                weekDayStr += "Вт "
+            if (intArray[2] == 1)
+                weekDayStr += "Ср "
+            if (intArray[3] == 1)
+                weekDayStr += "Чт "
+            if (intArray[4] == 1)
+                weekDayStr += "Пт "
+            if (intArray[5] == 1)
+                weekDayStr += "Сб "
+            if (intArray[6] == 1)
+                weekDayStr += "Вс"
+        } else if(mClass?.repeatType == RepeatTypes.DAY.TYPE){
+            when(mClass.repeatFreq){
+                1 -> { weekDayStr = "Каждый день"}
+                2, 3, 4 -> {weekDayStr = "Каждые ${mClass.repeatFreq} дня"}
+                else -> { weekDayStr = "Каждые ${mClass.repeatFreq} дней"}
+            }
         }
-        if(intArray[0] == 1)
-            weekDayStr += "Пн "
-        if(intArray[1] == 1)
-            weekDayStr += "Вт "
-        if(intArray[2] == 1)
-            weekDayStr += "Ср "
-        if(intArray[3] == 1)
-            weekDayStr += "Чт "
-        if(intArray[4] == 1)
-            weekDayStr += "Пт "
-        if(intArray[5] == 1)
-            weekDayStr += "Сб "
-        if(intArray[6] == 1)
-            weekDayStr += "Вс"
 
         val subjects = DBHelper(context).getSubjects()
         var subject = Subject(-1, "", 1, 1)
@@ -57,11 +70,10 @@ class ClassListAdapter(context : Context, val resource: Int, objects: MutableLis
         }
 
         (view?.findViewById(R.id.classColor) as View).background = getDrawable(context, colorResources[idsOfColors.indexOf(subject.color)])
-        (view?.findViewById(R.id.classType) as TextView).text = mClass?.type
-        (view?.findViewById(R.id.teacherID) as TextView).text = DBHelper(context).getTeachersById(mClass!!.teacherID)?.name
-        Log.d("ttt", "${mClass!!.scheduleID}")
-        (view?.findViewById(R.id.positionID) as TextView).text = "${DBHelper(context).getScheduleById(mClass!!.scheduleID)?.position} пара"
-        (view?.findViewById(R.id.weekDay) as TextView).text = weekDayStr
+        (view.findViewById(R.id.classType) as TextView).text = mClass?.type
+        (view.findViewById(R.id.teacherID) as TextView).text = DBHelper(context).getTeachersById(mClass!!.teacherID)?.name
+        (view.findViewById(R.id.positionID) as TextView).text = if(DBHelper(context).getScheduleById(mClass.scheduleID)?.position != null) "${DBHelper(context).getScheduleById(mClass.scheduleID)?.position} пара" else ""
+        (view.findViewById(R.id.weekDay) as TextView).text = weekDayStr
 
         return view
     }

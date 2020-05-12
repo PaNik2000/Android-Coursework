@@ -172,13 +172,13 @@ class AddNewClassActivity : AppCompatActivity() {
                     } else {
                         DBHelper(this).insertClasses(intent.getIntExtra("subjectID", -1),
                             typeClass.text.toString(),
-                            sortedSchedules.elementAt(scheduleSpinner.selectedItemPosition).ID!!,
+                            if(!sortedSchedules.isEmpty()) sortedSchedules.elementAt(scheduleSpinner.selectedItemPosition).ID!! else null,
                             SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString()),
                             SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString()),
                             weekDay,
                             if ((repeatSpinner.selectedItemPosition == 0)) RepeatTypes.DAY.TYPE else RepeatTypes.WEEK.TYPE,
                             frequencySpinner.selectedItemPosition + 1,
-                            teachers.elementAt(teacherSpinner.selectedItemPosition).ID)
+                            if(!teachers.isEmpty()) teachers.elementAt(teacherSpinner.selectedItemPosition).ID else null)
                         finish()
                     }
                 } else {
@@ -191,13 +191,13 @@ class AddNewClassActivity : AppCompatActivity() {
                             intent.getIntExtra("classID", -1),
                             intent.getIntExtra("subjectID", -1),
                             typeClass.text.toString(),
-                            sortedSchedules.elementAt(scheduleSpinner.selectedItemPosition).ID!!,
+                            if(!sortedSchedules.isEmpty()) sortedSchedules.elementAt(scheduleSpinner.selectedItemPosition).ID!! else null,
                             SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString()),
                             SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString()),
                             weekDay,
-                            repeatSpinner.selectedItemPosition,
+                            if ((repeatSpinner.selectedItemPosition == 0)) RepeatTypes.DAY.TYPE else RepeatTypes.WEEK.TYPE,
                             frequencySpinner.selectedItemPosition + 1,
-                            teachers.elementAt(teacherSpinner.selectedItemPosition).ID
+                            if(!teachers.isEmpty()) teachers.elementAt(teacherSpinner.selectedItemPosition).ID else null
                         )
                         Toast.makeText(this, "Я устал", Toast.LENGTH_SHORT).show()
                         finish()
