@@ -95,12 +95,18 @@ class AddNewTermActivity : AppCompatActivity() {
     //Нажатие на startDate
     fun onStartDateClick(view : View){
         val cal = Calendar.getInstance()
+        cal.time = SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString())
         val curYear = cal.get(Calendar.YEAR)
         val curMonth = cal.get(Calendar.MONTH)
         val curDayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
         val mDateDialog= DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             // Display Selected date in startDate
-            mStartDate.text = "$dayOfMonth.${monthOfYear+1}.$year"
+            val day = if(9 > dayOfMonth) "0${dayOfMonth}" else "${dayOfMonth}"
+            val month = if(9 > (monthOfYear+1)) "0${monthOfYear + 1}" else "${monthOfYear+1}"
+            mStartDate.text = "$day.${month}.$year"
+            cal.set(year, monthOfYear+3, dayOfMonth)
+            val endDate: Date = cal.time
+            mEndDate.text = SimpleDateFormat("dd.MM.yyyy").format(endDate)
         }, curYear, curMonth, curDayOfMonth)
         mDateDialog.show()
     }
@@ -108,13 +114,16 @@ class AddNewTermActivity : AppCompatActivity() {
     //Нажатие на endDate
     fun onEndDateClick(view: View){
         val cal = Calendar.getInstance()
-        cal.add(Calendar.MONTH, 3)
+        cal.time = SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString())
         val curYear = cal.get(Calendar.YEAR)
         val curMonth = cal.get(Calendar.MONTH)
         val curDayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
         val mDateDialog= DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            mEndDate.text = "$dayOfMonth.${monthOfYear+1}.$year"
+            val day = if(9 > dayOfMonth) "0${dayOfMonth}" else "${dayOfMonth}"
+            val month = if(9 > (monthOfYear+1)) "0${monthOfYear + 1}" else "${monthOfYear+1}"
+            mEndDate.text = "$day.${month}.$year"
         }, curYear, curMonth, curDayOfMonth)
+        mDateDialog.datePicker.minDate = SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString()).time
         mDateDialog.show()
     }
 
@@ -125,4 +134,5 @@ class AddNewTermActivity : AppCompatActivity() {
         cal.add(Calendar.MONTH, num)
         return cal.time
     }
+
 }

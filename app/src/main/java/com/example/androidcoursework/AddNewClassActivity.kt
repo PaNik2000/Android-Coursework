@@ -104,11 +104,8 @@ class AddNewClassActivity : AppCompatActivity() {
         }
         if(createNewClass){
             supportActionBar?.title = "New class"
-            var curDate = Date()
-            val dateFormat = SimpleDateFormat("dd.MM.yyy")
-            mStartDate.text = dateFormat.format(curDate)
-            curDate = addMonthToDate(curDate, 3)
-            mEndDate.text = dateFormat.format(curDate)
+            mStartDate.text = DBHelper(this).getTermByID(DBHelper(this).getSubjectsById(intent.getIntExtra("subjectID", -1))!!.termID)!!.startDate
+            mEndDate.text = DBHelper(this).getTermByID(DBHelper(this).getSubjectsById(intent.getIntExtra("subjectID", -1))!!.termID)!!.endDate
         } else {
             supportActionBar?.title = dbHelper.getSubjectsById(intent.getIntExtra("subjectID", -1))?.name
             typeClass.setText(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))?.type, TextView.BufferType.EDITABLE)
@@ -222,24 +219,42 @@ class AddNewClassActivity : AppCompatActivity() {
 
     fun onEditStartClick(view: View){
         val cal = Calendar.getInstance()
+        cal.time = SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString())
         val curYear = cal.get(Calendar.YEAR)
         val curMonth = cal.get(Calendar.MONTH)
         val curDayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
         val mDateDialog= DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            mStartDate.text = "$dayOfMonth.${monthOfYear+1}.$year"
+            // Display Selected date in startDate
+            val day = if(9 > dayOfMonth) "0${dayOfMonth}" else "${dayOfMonth}"
+            val month = if(9 > (monthOfYear+1)) "0${monthOfYear + 1}" else "${monthOfYear+1}"
+            mStartDate.text = "$day.${month}.$year"
+            if(SimpleDateFormat("dd.MM.yyy").parse(mStartDate.text.toString()) >= SimpleDateFormat("dd.MM.yyy").parse(mEndDate.text.toString())) {
+                cal.set(year, monthOfYear, dayOfMonth)
+                val endDate: Date = cal.time
+                mEndDate.text = SimpleDateFormat("dd.MM.yyyy").format(endDate)
+            }
         }, curYear, curMonth, curDayOfMonth)
+        val mMinDate = DBHelper(this).getTermByID(DBHelper(this).getSubjectsById(intent.getIntExtra("subjectID", -1))!!.termID)!!.startDate
+        val mMaxDate = DBHelper(this).getTermByID(DBHelper(this).getSubjectsById(intent.getIntExtra("subjectID", -1))!!.termID)!!.endDate
+        mDateDialog.datePicker.minDate = SimpleDateFormat("dd.MM.yyyy").parse(mMinDate).time
+        mDateDialog.datePicker.maxDate = SimpleDateFormat("dd.MM.yyyy").parse(mMaxDate).time
         mDateDialog.show()
     }
 
     fun onEditEndClick(view: View){
         val cal = Calendar.getInstance()
-        cal.add(Calendar.MONTH, 3)
+        cal.time = SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString())
         val curYear = cal.get(Calendar.YEAR)
         val curMonth = cal.get(Calendar.MONTH)
         val curDayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
         val mDateDialog= DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            mEndDate.text = "$dayOfMonth.${monthOfYear+1}.$year"
+            val day = if(9 > dayOfMonth) "0${dayOfMonth}" else "${dayOfMonth}"
+            val month = if(9 > (monthOfYear+1)) "0${monthOfYear + 1}" else "${monthOfYear+1}"
+            mEndDate.text = "$day.${month}.$year"
         }, curYear, curMonth, curDayOfMonth)
+        val mMaxDate = DBHelper(this).getTermByID(DBHelper(this).getSubjectsById(intent.getIntExtra("subjectID", -1))!!.termID)!!.endDate
+        mDateDialog.datePicker.minDate = SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString()).time
+        mDateDialog.datePicker.maxDate = SimpleDateFormat("dd.MM.yyyy").parse(mMaxDate).time
         mDateDialog.show()
     }
 

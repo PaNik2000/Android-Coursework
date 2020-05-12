@@ -77,6 +77,9 @@ class AddNewScheduleActivity : AppCompatActivity() {
                 else if (!checkEndDate()){
                     Toast.makeText(this, "Selected end date intersects with existing schedule", Toast.LENGTH_SHORT).show()
                 }
+                else if (!checkDate()){
+                    Toast.makeText(this, "Selected end date is earlier than start date", Toast.LENGTH_SHORT).show()
+                }
                 else if(createNewScedule){
                     //Расстановка новых позиций
                     val newSchedulePosition = getNewPosition()
@@ -173,6 +176,11 @@ class AddNewScheduleActivity : AppCompatActivity() {
             }
         }
         return true
+    }
+
+    fun checkDate() : Boolean{
+        val timeFormat = SimpleDateFormat("HH:mm")
+        return timeFormat.parse(mStartDate.text.toString()) < timeFormat.parse(mEndDate.text.toString())
     }
 
     fun getNewPosition() : Int {
