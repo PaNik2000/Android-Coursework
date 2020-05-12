@@ -19,7 +19,9 @@ import kotlin.collections.ArrayList
 
 class ScheduleFragment : Fragment() {
 
-    private val scheduleList = ArrayList<String>()
+    lateinit var scheduleList: MutableList<Schedule>
+    lateinit var  listView: ListView
+    lateinit var sortedScheduleList: MutableList<Schedule>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,21 +36,16 @@ class ScheduleFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_schedule, container, false)
 
-        val listView = view.findViewById(R.id.scheduleList) as ListView
+        listView = view.findViewById(R.id.scheduleList) as ListView
+        scheduleList = DBHelper(activity as Context).getSchedule()
+        sortedScheduleList = sortSchedules(scheduleList)
 
-        if (scheduleList.isEmpty()) {
-            scheduleList.add("9:00 - 10:30")
-            scheduleList.add("10:40 - 12:10")
-            scheduleList.add("13:10 - 14:40")
-            scheduleList.add("14:50 - 16:20")
-            scheduleList.add("4:20 - 69")
-        }
-
-        listView.adapter = ScheduleListAdapter(activity as Context, R.layout.schedule_list_element, scheduleList)
+        listView.adapter = ScheduleListAdapter(activity as Context, R.layout.schedule_list_element, sortedScheduleList)
         listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
                 val intentToAddTeacher = Intent(activity, AddNewScheduleActivity::class.java)
                 intentToAddTeacher.putExtra("Create or change", "change")
+                intentToAddTeacher.putExtra("scheduleID", sortedScheduleList[position].ID)
                 startActivity(intentToAddTeacher)
             }
         })
@@ -63,10 +60,34 @@ class ScheduleFragment : Fragment() {
 
         return view
     }
+
+    override fun onResume() {
+        super.onResume()
+        scheduleList = DBHelper(activity as Context).getSchedule()
+        sortedScheduleList = sortSchedules(scheduleList)
+        listView.adapter = ScheduleListAdapter(activity as Context, R.layout.schedule_list_element, sortedScheduleList)
+        for(schedule in sortedScheduleList){
+        }
+    }
+
+    fun sortSchedules(scheduleList: MutableList<Schedule>) : MutableList<Schedule>{
+        val sortedSchedule = mutableListOf<Schedule>()
+
+        for(i in 1..scheduleList.size){
+            for(schedule in scheduleList){
+                if(schedule.position == i){
+                    sortedSchedule.add(schedule)
+                    break
+                }
+            }
+        }
+        return sortedSchedule
+    }
+
 }
 
-class ScheduleListAdapter(context : Context, val resource: Int, objects: MutableList<String>)
-    : ArrayAdapter<String>(context, resource, objects){
+class ScheduleListAdapter(context : Context, val resource: Int, objects: MutableList<Schedule>)
+    : ArrayAdapter<Schedule>(context, resource, objects){
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val schedule = getItem(position)
@@ -76,8 +97,8 @@ class ScheduleListAdapter(context : Context, val resource: Int, objects: Mutable
             view = LayoutInflater.from(context).inflate(resource, null)
         }
 
-        (view?.findViewById(R.id.scheduleID) as TextView).text = (position + 1).toString()
-        (view.findViewById(R.id.scheduleTime) as TextView).text = schedule
+        (view?.findViewById(R.id.scheduleID) as TextView).text = schedule?.position.toString()
+        (view.findViewById(R.id.scheduleTime) as TextView).text = "${schedule?.startTime} - ${schedule?.endTime}"
 
         return view
     }

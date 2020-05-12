@@ -2,10 +2,12 @@ package com.example.androidcoursework
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import java.text.SimpleDateFormat
 import java.util.*
@@ -17,6 +19,7 @@ class CalendarFragment : Fragment() {
     val DBList = ArrayList<MyClass>()                 // Список всех занятий из БД
     lateinit var adapter : CalendarListAdapter
     val currentDate = Calendar.getInstance()            // Текущая выбранная дата в календаре
+    lateinit var dbHelper : DBHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,33 +28,13 @@ class CalendarFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_calendar, container, false)
         adapter = CalendarListAdapter(activity as Context, R.layout.calendar_list_element, currentClasses)
+        dbHelper = DBHelper(activity as Context)
 
         val calendarView = view.findViewById(R.id.calendarView) as CalendarView
         val listView = view.findViewById(R.id.calendarList) as ListView
 
-        // Временно записал даты начала и конца занятий
-        val date1 = Calendar.getInstance()
-        date1.set(2020, 1, 2)
-        val strDate1 = date1.get(Calendar.DAY_OF_MONTH).toString() + "." +
-                (date1.get(Calendar.MONTH) + 1).toString() + "." +
-                date1.get(Calendar.YEAR).toString()
-        val date2 = Calendar.getInstance()
-        date2.set(2020, 1, 9)
-        val strDate2 = date2.get(Calendar.DAY_OF_MONTH).toString() + "." +
-                (date2.get(Calendar.MONTH) + 1).toString() + "." +
-                date2.get(Calendar.YEAR).toString()
-        val date3 = Calendar.getInstance()
-        date3.set(2020, 4, 30)
-        val strDate3 = date3.get(Calendar.DAY_OF_MONTH).toString() + "." +
-                (date3.get(Calendar.MONTH) + 1).toString() + "." +
-                date3.get(Calendar.YEAR).toString()
-
-        // TODO Вставить выборку из БД
         DBList.clear()
-        DBList.add(MyClass(1, 1, 2, 1, "Lecture", strDate1, strDate3, 10000, RepeatTypes.WEEK.TYPE, 1))
-        DBList.add(MyClass(2, 1, 1, 1, "Practice", strDate1, strDate3, 10000, RepeatTypes.WEEK.TYPE, 2))
-        DBList.add(MyClass(3, 2, 1, 3, "Lecture", strDate2, strDate3, 1000000, RepeatTypes.WEEK.TYPE, 2))
-
+        DBList.addAll(dbHelper.getClasses())
         calendarView.setOnDateChangeListener(object : CalendarView.OnDateChangeListener{
             override fun onSelectedDayChange(
                 view: CalendarView,
@@ -102,7 +85,7 @@ class CalendarFragment : Fragment() {
                                 break
                             }
                             if (firstClass.after(currentDate)) break
-                            firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq.toInt() * 7)
+                            firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq * 7)
                         }
                     }
                     else {
@@ -114,7 +97,7 @@ class CalendarFragment : Fragment() {
                                 break
                             }
                             if (firstClass.after(currentDate)) break
-                            firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq.toInt())
+                            firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq)
                         }
                     }
                 }
@@ -176,7 +159,7 @@ class CalendarFragment : Fragment() {
                         break
                     }
                     if (firstClass.after(currentDate)) break
-                    firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq.toInt() * 7)
+                    firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq * 7)
                 }
             }
             else {
@@ -188,7 +171,7 @@ class CalendarFragment : Fragment() {
                         break
                     }
                     if (firstClass.after(currentDate)) break
-                    firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq.toInt())
+                    firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq)
                 }
             }
         }
@@ -204,18 +187,21 @@ class CalendarListAdapter(context : Context, val resource: Int, objects: Mutable
         val clas = getItem(position)
         var view = convertView
 
+        val dbHelper = DBHelper(context)
+        val subject = dbHelper.getSubjectsById(clas!!.subjectID)
+        val schedule = dbHelper.getScheduleById(clas.scheduleID)
+        val teacher = dbHelper.getTeachersById(clas.teacherID)
+
+        val subjTypeStr = "${subject?.name} ${clas.type}"
+
         if (view == null) {
             view = LayoutInflater.from(context).inflate(resource, null)
         }
 
-        // TODO Выбор цвета в соответствии с id цвета
-        val drawable = context.resources.getDrawable(R.drawable.blue)
-
-        // TODO Вставка названия предмета и имени преподавателя в соответсвии с id
-        (view?.findViewById(R.id.calendarListPosition) as TextView).text = clas?.scheduleID.toString()
-        (view.findViewById(R.id.calendarListColor) as View).background = drawable
-        (view.findViewById(R.id.calendarListSubjType) as TextView).text = clas?.subjectID.toString() + " " + clas?.type
-        (view.findViewById(R.id.calendarListTeacher) as TextView).text = clas?.teacherID.toString()
+        (view?.findViewById(R.id.calendarListPosition) as TextView).text = schedule?.position.toString()
+        (view.findViewById(R.id.calendarListColor) as View).background = getDrawable(context, colorResources[idsOfColors.indexOf(subject?.color)])
+        (view.findViewById(R.id.calendarListSubjType) as TextView).text = subjTypeStr
+        (view.findViewById(R.id.calendarListTeacher) as TextView).text = teacher?.name
 
         return view
     }

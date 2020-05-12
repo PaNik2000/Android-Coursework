@@ -158,15 +158,15 @@ class DBHelper(context: Context)
         Log.d(LOG_TAG, "inserted into subjects")
     }
 
-    fun insertSchedule(position: Int, start_time: Time, end_time: Time)
+    fun insertSchedule(position: Int, start_time: Date, end_time: Date)
     {
         Log.d(LOG_TAG, "--- insertSchedule ---")
         val record = ContentValues()
         with(record)
         {
             put("position", position)
-            put("start_time", start_time.toString())
-            put("end_time", end_time.toString())
+            put("start_time", SimpleDateFormat("HH:mm").format(start_time))
+            put("end_time", SimpleDateFormat("HH:mm").format(end_time))
         }
 
         writableDatabase.insert("schedule", null, record)
@@ -556,14 +556,15 @@ class DBHelper(context: Context)
         Log.d(LOG_TAG, "updated subjects")
     }
 
-    fun updateSchedule(id: Int, start_time: Time, end_time: Time)
+    fun updateSchedule(id: Int, position: Int, start_time: Date, end_time: Date)
     {
         Log.d(LOG_TAG, "--- updateSchedule ---")
         val record = ContentValues()
         with(record)
         {
-            put("start_time", start_time.toString())
-            put("end_time", end_time.toString())
+            put("position", position)
+            put("start_time", SimpleDateFormat("HH:mm").format(start_time))
+            put("end_time", SimpleDateFormat("HH:mm").format(end_time))
         }
 
         writableDatabase.update("schedule", record, "id = $id", null)
