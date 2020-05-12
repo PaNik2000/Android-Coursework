@@ -27,6 +27,7 @@
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="#E91E63"
+        android:src="@drawable/ic_add"
         android:onClick="onAddClassButtonClick"/>
 
     <TextView

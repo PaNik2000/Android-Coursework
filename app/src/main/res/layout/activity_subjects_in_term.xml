@@ -28,6 +28,7 @@
         android:clickable="true"
         android:focusable="true"
         android:onClick="onAddSubjectButtonClick"
+        android:src="@drawable/ic_add"
         app:backgroundTint="#E91E63" />
 
     <ListView
