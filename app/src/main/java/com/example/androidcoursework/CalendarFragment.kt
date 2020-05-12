@@ -70,22 +70,27 @@ class CalendarFragment : Fragment() {
                         weekDay /= 10
                         if (weekDay % 10 == 1) dayOfWeek.add(Calendar.MONDAY)
 
-                        while (true) {
-                            if (dayOfWeek.contains(firstClass.get(Calendar.DAY_OF_WEEK))) {
-                                break
-                            }
-                            firstClass.add(Calendar.DAY_OF_MONTH, 1)
-                        }
+                        for (day in dayOfWeek) {
+                            while (true) {
+                                if (day == firstClass.get(Calendar.DAY_OF_WEEK)) {
+                                    break
+                                }
 
-                        while(true) {
-                            if (currentDate.get(Calendar.YEAR) == firstClass.get(Calendar.YEAR) &&
-                                currentDate.get(Calendar.MONTH) == firstClass.get(Calendar.MONTH) &&
-                                currentDate.get(Calendar.DAY_OF_MONTH) == firstClass.get(Calendar.DAY_OF_MONTH)) {
-                                currentClasses.add(clas)
-                                break
+                                firstClass.add(Calendar.DAY_OF_MONTH, 1)
                             }
-                            if (firstClass.after(currentDate)) break
-                            firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq * 7)
+
+                            while(true) {
+                                if (currentDate.get(Calendar.YEAR) == firstClass.get(Calendar.YEAR) &&
+                                    currentDate.get(Calendar.MONTH) == firstClass.get(Calendar.MONTH) &&
+                                    currentDate.get(Calendar.DAY_OF_MONTH) == firstClass.get(Calendar.DAY_OF_MONTH)) {
+                                    currentClasses.add(clas)
+                                    break
+                                }
+                                if (firstClass.after(currentDate)) break
+                                firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq * 7)
+                            }
+
+                            firstClass.time = SimpleDateFormat("dd.MM.yyyy").parse(clas.startDate)
                         }
                     }
                     else {
@@ -144,22 +149,25 @@ class CalendarFragment : Fragment() {
                 weekDay /= 10
                 if (weekDay % 10 == 1) dayOfWeek.add(Calendar.MONDAY)
 
-                while (true) {
-                    if (dayOfWeek.contains(firstClass.get(Calendar.DAY_OF_WEEK))) {
-                        break
-                    }
-                    firstClass.add(Calendar.DAY_OF_MONTH, 1)
-                }
+                for (day in dayOfWeek) {
+                    while (true) {
+                        if (day == firstClass.get(Calendar.DAY_OF_WEEK)) {
+                            break
+                        }
 
-                while(true) {
-                    if (currentDate.get(Calendar.YEAR) == firstClass.get(Calendar.YEAR) &&
-                        currentDate.get(Calendar.MONTH) == firstClass.get(Calendar.MONTH) &&
-                        currentDate.get(Calendar.DAY_OF_MONTH) == firstClass.get(Calendar.DAY_OF_MONTH)) {
-                        currentClasses.add(clas)
-                        break
+                        firstClass.add(Calendar.DAY_OF_MONTH, 1)
                     }
-                    if (firstClass.after(currentDate)) break
-                    firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq * 7)
+
+                    while(true) {
+                        if (currentDate.get(Calendar.YEAR) == firstClass.get(Calendar.YEAR) &&
+                            currentDate.get(Calendar.MONTH) == firstClass.get(Calendar.MONTH) &&
+                            currentDate.get(Calendar.DAY_OF_MONTH) == firstClass.get(Calendar.DAY_OF_MONTH)) {
+                            currentClasses.add(clas)
+                            break
+                        }
+                        if (firstClass.after(currentDate)) break
+                        firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq * 7)
+                    }
                 }
             }
             else {
