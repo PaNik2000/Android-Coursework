@@ -168,6 +168,8 @@ class CalendarFragment : Fragment() {
                         if (firstClass.after(currentDate)) break
                         firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq * 7)
                     }
+
+                    firstClass.time = SimpleDateFormat("dd.MM.yyyy").parse(clas.startDate)
                 }
             }
             else {
