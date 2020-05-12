@@ -15,6 +15,10 @@ class DBHelper(context: Context)
 
     val LOG_TAG = "DBLogs"
 
+    override fun onOpen(db: SQLiteDatabase) {
+        super.onOpen(db)
+        db.execSQL("PRAGMA foreign_keys=ON;")
+    }
     override fun onCreate(db: SQLiteDatabase) {
         Log.d(LOG_TAG, "--- onCreate database ---")
 
