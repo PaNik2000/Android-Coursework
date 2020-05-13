@@ -9,14 +9,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        <activity android:name=".AddNewScheduleActivity"></activity>
-        <activity android:name=".AddNewTeacherActivity" />
-        <activity android:name=".AddNewClassActivity" />
-        <activity android:name=".ClassesInSubjectActivity" />
-        <activity android:name=".AddNewSubjectActivity" />
-        <activity android:name=".SubjectsInTermActivity" />
-        <activity android:name=".AddNewTermActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".AddNewScheduleActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".AddNewTeacherActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".AddNewClassActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ClassesInSubjectActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".AddNewSubjectActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".SubjectsInTermActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".AddNewTermActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
