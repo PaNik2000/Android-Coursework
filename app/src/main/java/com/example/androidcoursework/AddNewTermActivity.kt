@@ -2,7 +2,6 @@ package com.example.androidcoursework
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -47,10 +46,9 @@ class AddNewTermActivity : AppCompatActivity() {
             mStartDate.text = dateFormat.format(curDate)
             curDate = addMonthToDate(curDate, 3)
             mEndDate.text = dateFormat.format(curDate)
-            Log.d("DBLogs", "adding new")
-            supportActionBar?.title = "New term"
+            supportActionBar?.title = "Новый семестр"
         } else {
-            supportActionBar?.title = "Term"
+            supportActionBar?.title = "Семестр"
             val textView = findViewById(R.id.termName) as TextView;
             textView.text = intent.getStringExtra("termName")
             mStartDate.text = db.getTermByID(intent.getIntExtra("termID", -1))?.startDate
@@ -70,13 +68,11 @@ class AddNewTermActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.add -> {
                 if(findViewById<EditText>(R.id.termName).text.isEmpty()){
-                    Toast.makeText(this, "Fill in the gaps!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_SHORT).show()
                 } else if(createNewTerm){
-                    Log.d("DBLogs", "generating")
                     val startDate = SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString())
                     val endDate = SimpleDateFormat("dd.MM.yyyy").parse(mEndDate.text.toString())
                     db.insertTerm(findViewById<EditText>(R.id.termName).text.toString(), startDate, endDate)
-                    Toast.makeText(this, "Why we still here?", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
                     val startDate = SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString())

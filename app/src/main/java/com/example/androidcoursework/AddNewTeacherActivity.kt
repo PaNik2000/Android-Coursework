@@ -2,7 +2,6 @@ package com.example.androidcoursework
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -31,9 +30,9 @@ class AddNewTeacherActivity : AppCompatActivity() {
         teacherName = findViewById(R.id.teacherNameText)
 
         if(createNewTeacher){
-            supportActionBar?.title = "New teacher"
+            supportActionBar?.title = "Новый преподаватель"
         } else {
-            supportActionBar?.title = "Teacher"
+            supportActionBar?.title = "Преподаватель"
             teacherName.setText(DBHelper(this).getTeachersById(intent.getIntExtra("teacherID", -1))?.name, TextView.BufferType.EDITABLE)
         }
     }
@@ -50,15 +49,13 @@ class AddNewTeacherActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.add -> {
                 if(teacherName.text.isEmpty()){
-                    Toast.makeText(this, "Fill in the gaps!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_SHORT).show()
                 }
                 else if(createNewTeacher){
                     DBHelper(this).insertTeachers(teacherName.text.toString())
-                    Toast.makeText(this, "Хачу питсу", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
                     DBHelper(this).updateTeachers(intent.getIntExtra("teacherID", -1), teacherName.text.toString())
-                    Toast.makeText(this, "Хачу питсу", Toast.LENGTH_SHORT).show()
                     finish()
                 }
             }

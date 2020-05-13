@@ -3,18 +3,13 @@ package com.example.androidcoursework
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
-import android.util.Size
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.size
 import kotlinx.android.synthetic.main.activity_add_new_class.*
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -70,7 +65,7 @@ class AddNewClassActivity : AppCompatActivity() {
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         with(editPositionClass){
             adapter = aa
-            prompt = "Select number of the class"
+            prompt = "Выберете номер пары"
             gravity = Gravity.CENTER
         }
         //Заполнение спиннера учителей
@@ -82,7 +77,7 @@ class AddNewClassActivity : AppCompatActivity() {
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         with(editTeacher){
             adapter = aa
-            prompt = "Teacher"
+            prompt = "Выберете преподавателя"
             gravity = Gravity.CENTER
         }
         //Доступность выбора дня в зависимости от выбранного режима повторения
@@ -103,7 +98,7 @@ class AddNewClassActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
         if(createNewClass){
-            supportActionBar?.title = "New class"
+            supportActionBar?.title = "Новое занятие"
             mStartDate.text = DBHelper(this).getTermByID(DBHelper(this).getSubjectsById(intent.getIntExtra("subjectID", -1))!!.termID)!!.startDate
             mEndDate.text = DBHelper(this).getTermByID(DBHelper(this).getSubjectsById(intent.getIntExtra("subjectID", -1))!!.termID)!!.endDate
         } else {
@@ -166,9 +161,9 @@ class AddNewClassActivity : AppCompatActivity() {
 
                 if(createNewClass) {
                     if (typeClass.text.isEmpty()) {
-                        Toast.makeText(this, "Fill in the gaps!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_SHORT).show()
                     } else if (weekDay == 0 && weekSelected) {
-                        Toast.makeText(this, "Choose the day of a week!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Выберете номер пары!", Toast.LENGTH_SHORT).show()
                     } else {
                         DBHelper(this).insertClasses(intent.getIntExtra("subjectID", -1),
                             typeClass.text.toString(),
@@ -183,9 +178,9 @@ class AddNewClassActivity : AppCompatActivity() {
                     }
                 } else {
                     if(typeClass.text.isEmpty())
-                        Toast.makeText(this, "Fill in the gaps!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show()
                     if(weekDay == 0 && weekSelected){
-                        Toast.makeText(this, "Choose the day of a week!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "CВыберете номер пары!", Toast.LENGTH_SHORT).show()
                     } else {
                         DBHelper(this).updateClasses(
                             intent.getIntExtra("classID", -1),
@@ -199,14 +194,12 @@ class AddNewClassActivity : AppCompatActivity() {
                             frequencySpinner.selectedItemPosition + 1,
                             if(!teachers.isEmpty()) teachers.elementAt(teacherSpinner.selectedItemPosition).ID else null
                         )
-                        Toast.makeText(this, "Я устал", Toast.LENGTH_SHORT).show()
                         finish()
                     }
                 }
             }
             R.id.delete->{
                 DBHelper(this).deleteClassesByID(intent.getIntExtra("classID", -1))
-                Toast.makeText(this, "Удалил)", Toast.LENGTH_SHORT).show()
                 finish()
             }
             android.R.id.home ->{

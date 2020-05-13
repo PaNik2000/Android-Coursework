@@ -3,7 +3,6 @@ package com.example.androidcoursework
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +12,6 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.fragment_schedule.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 class ScheduleFragment : Fragment() {
 
@@ -32,7 +28,6 @@ class ScheduleFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("abc", "schedule fragment")
 
         val view = inflater.inflate(R.layout.fragment_schedule, container, false)
 

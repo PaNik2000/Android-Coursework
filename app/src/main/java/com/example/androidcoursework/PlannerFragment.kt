@@ -1,7 +1,6 @@
 package com.example.androidcoursework
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,13 +73,13 @@ class PlannerPagerAdapter(val fm: FragmentManager) :
     override fun getPageTitle(position: Int): CharSequence? {
         when (position) {
             SCHEDULE_POSITION -> {
-                return "Schedule"
+                return "Расписание пар"
             }
             TERM_POSITION -> {
-                return "Term"
+                return "Семестры"
             }
             TEACHER_POSITION -> {
-                return "Teacher"
+                return "Преподаватели"
             }
             else -> {
                 return "Error"

@@ -22,7 +22,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:hint="Name, surname"
+        android:hint="ФИО"
         android:textSize="22dp"
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"

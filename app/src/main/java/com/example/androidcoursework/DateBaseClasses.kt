@@ -1,7 +1,5 @@
 package com.example.androidcoursework
 
-import java.util.*
-
 class Term(val ID: Int?, val name : String, val startDate : String, val endDate : String)
 
 class Subject(val ID: Int?, val name : String, val color: Int, val termID: Int)

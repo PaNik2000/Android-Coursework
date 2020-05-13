@@ -6,14 +6,14 @@
         android:id="@+id/delete"
         android:icon="@android:drawable/ic_menu_delete"
         android:orderInCategory="100"
-        android:title="Apply"
+        android:title="Удалить"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/add"
         android:icon="@android:drawable/ic_menu_save"
         android:orderInCategory="100"
-        android:title="Apply"
+        android:title="Сохранить"
         app:showAsAction="always" />
 
 </menu>

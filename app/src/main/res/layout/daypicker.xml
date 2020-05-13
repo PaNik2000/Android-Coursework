@@ -9,8 +9,8 @@
         android:layout_height="50dp"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
-        android:textOff="Mon"
-        android:textOn="Mon"
+        android:textOff="Пон"
+        android:textOn="Пон"
         style="@style/toggleButton"
         android:background="@drawable/toggle_bg" />
     <ToggleButton
@@ -19,8 +19,8 @@
         android:layout_marginRight="3dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:textOff="Tue"
-        android:textOn="Tue"
+        android:textOff="Вт"
+        android:textOn="Вт"
         style="@style/toggleButton"
         android:background="@drawable/toggle_bg" />
 
@@ -30,8 +30,8 @@
         android:layout_marginRight="3dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:textOff="Wed"
-        android:textOn="Wed"
+        android:textOff="Ср"
+        android:textOn="Ср"
         style="@style/toggleButton"
         android:background="@drawable/toggle_bg" />
 
@@ -41,8 +41,8 @@
         android:layout_marginRight="3dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:textOff="Th"
-        android:textOn="Th"
+        android:textOff="Чт"
+        android:textOn="Чт"
         style="@style/toggleButton"
         android:background="@drawable/toggle_bg" />
 
@@ -52,8 +52,8 @@
         android:layout_marginRight="3dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:textOff="Fr"
-        android:textOn="Fr"
+        android:textOff="Пт"
+        android:textOn="Пт"
         style="@style/toggleButton"
         android:background="@drawable/toggle_bg" />
 
@@ -63,8 +63,8 @@
         android:layout_marginRight="3dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:textOff="Sat"
-        android:textOn="Sat"
+        android:textOff="Сб"
+        android:textOn="Сб"
         style="@style/toggleButton"
         android:background="@drawable/toggle_bg" />
 
@@ -74,8 +74,8 @@
         android:layout_marginRight="3dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:textOff="Sun"
-        android:textOn="Sun"
+        android:textOff="Вс"
+        android:textOn="Вс"
         style="@style/toggleButton"
         android:background="@drawable/toggle_bg" />
 </LinearLayout>

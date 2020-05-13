@@ -4,8 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
-import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -13,14 +11,11 @@ import java.util.*
 class DBHelper(context: Context)
     : SQLiteOpenHelper(context, "courseWorkDB", null, 1) {
 
-    val LOG_TAG = "DBLogs"
-
     override fun onOpen(db: SQLiteDatabase) {
         super.onOpen(db)
         db.execSQL("PRAGMA foreign_keys=ON;")
     }
     override fun onCreate(db: SQLiteDatabase) {
-        Log.d(LOG_TAG, "--- onCreate database ---")
 
         // TERM////////////////////////////////////////////////////////////////////////////////////////////
         db.execSQL(("create table term ("
@@ -29,7 +24,6 @@ class DBHelper(context: Context)
                 + "start_date date,"
                 + "end_date date"
                 + ");"))
-        Log.d(LOG_TAG, "Term created")
 
         //SCHEDULE////////////////////////////////////////////////////////////////////////////////////////////
         db.execSQL(("create table schedule ("
@@ -38,14 +32,12 @@ class DBHelper(context: Context)
                 + "start_time time not null,"
                 + "end_time time not null"
                 + ");"))
-        Log.d(LOG_TAG, "Schedule created")
 
         //TEACHERS////////////////////////////////////////////////////////////////////////////////////////////
         db.execSQL(("create table teachers ("
                 + "id integer primary key autoincrement,"
                 + "name text not null"
                 + ");"))
-        Log.d(LOG_TAG, "Teachers created")
 
         //SUBJECTS////////////////////////////////////////////////////////////////////////////////////////////
         db.execSQL(("create table subjects ("
@@ -57,19 +49,6 @@ class DBHelper(context: Context)
                 + "foreign key(term_id) references term(id) on delete cascade"
 
                 + ");"))
-        Log.d(LOG_TAG, "Subjects created")
-
-        //SUB_TEACHERS////////////////////////////////////////////////////////////////////////////////////////////
-        db.execSQL(("create table sub_teachers("
-                + "id integer primary key autoincrement,"
-                + "subject_id integer,"
-                + "teacher_id integer,"
-
-                + "foreign key(subject_id) references subjects(id) on delete cascade,"
-                + "foreign key(teacher_id) references teachers(id) on delete cascade"
-
-                + ");"))
-        Log.d(LOG_TAG, "Sub_teachers created")
 
         //CLASSES////////////////////////////////////////////////////////////////////////////////////////////
         db.execSQL(("create table classes ("
@@ -89,13 +68,10 @@ class DBHelper(context: Context)
                 + "foreign key(teacher_id) references teachers(id) on delete set null"
 
                 + ");"))
-        Log.d(LOG_TAG, "Classes created")
 
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion:Int, newVersion:Int) {
-        Log.d(LOG_TAG, "--- onUpdate database ---")
-    }
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion:Int, newVersion:Int) {}
 
     //INSERTS////////////////////////////////////////////////////////////////////////////////////////////
     fun insertClasses(
@@ -105,18 +81,14 @@ class DBHelper(context: Context)
         teacher_id: Int?
     )
     {
-        Log.d(LOG_TAG, "--- insertClasses ---")
-
-        //TODO null processing in insert classes
-
         val record = ContentValues()
         with(record)
         {
             put("subject_id", subject_id)
             put("type", type)
             put("position", position)
-            put("start_date", SimpleDateFormat("dd.MM.yyyy").format(start_date)/*start_date.toString()*/)
-            put("end_date", SimpleDateFormat("dd.MM.yyyy").format(end_date)/*end_date.toString()*/)
+            put("start_date", SimpleDateFormat("dd.MM.yyyy").format(start_date))
+            put("end_date", SimpleDateFormat("dd.MM.yyyy").format(end_date))
             put("week_day", week_day)
             put("repeat_type", repeat_type)
             put("repeat_freq", repeat_freq)
@@ -124,28 +96,22 @@ class DBHelper(context: Context)
         }
 
         writableDatabase.insert("classes", null, record)
-        Log.d(LOG_TAG, "inserted into classes")
     }
 
     fun insertTerm(name: String, start_date: Date, end_date: Date)
     {
-        Log.d(LOG_TAG, "--- insertTerm ---")
         val record = ContentValues()
         with(record)
         {
             put("name", name)
-            put("start_date", SimpleDateFormat("dd.MM.yyyy").format(start_date)/*start_date.toString()*/)
-            put("end_date",SimpleDateFormat("dd.MM.yyyy").format(end_date) /*end_date.toString()*/)
+            put("start_date", SimpleDateFormat("dd.MM.yyyy").format(start_date))
+            put("end_date",SimpleDateFormat("dd.MM.yyyy").format(end_date) )
         }
         writableDatabase.insert("term", null, record)
-        Log.d(LOG_TAG, "inserted into term")
     }
 
     fun insertSubjects(name: String, color: Int?, term_id: Int)
     {
-        // TODO null processing in insert subjects
-
-        Log.d(LOG_TAG, "--- insertSubjects ---")
         val record = ContentValues()
         with(record)
         {
@@ -155,12 +121,10 @@ class DBHelper(context: Context)
         }
 
         writableDatabase.insert("subjects", null, record)
-        Log.d(LOG_TAG, "inserted into subjects")
     }
 
     fun insertSchedule(position: Int, start_time: Date, end_time: Date)
     {
-        Log.d(LOG_TAG, "--- insertSchedule ---")
         val record = ContentValues()
         with(record)
         {
@@ -170,13 +134,10 @@ class DBHelper(context: Context)
         }
 
         writableDatabase.insert("schedule", null, record)
-        Log.d(LOG_TAG, "inserted into schedule")
     }
 
     fun insertTeachers(name: String)
     {
-        Log.d(LOG_TAG, "--- insertTeachers ---")
-        Log.d("ttt", name)
         val record = ContentValues()
         with(record)
         {
@@ -184,21 +145,6 @@ class DBHelper(context: Context)
         }
 
         writableDatabase.insert("teachers", null, record)
-        Log.d(LOG_TAG, "inserted into teachers")
-    }
-
-    fun insertSubTeach(subject_id: Int, teacher_id: Int)
-    {
-        Log.d(LOG_TAG, "--- insertSubTeach ---")
-        val record = ContentValues()
-        with(record)
-        {
-            put("subject_id", subject_id)
-            put("teacher_id", teacher_id)
-        }
-
-        writableDatabase.insert("sub_teachers", null, record)
-        Log.d(LOG_TAG, "inserted into sub-teachers")
     }
 
     //GETTERS by ID////////////////////////////////////////////////////////////////////////////////////////////
@@ -359,7 +305,6 @@ class DBHelper(context: Context)
             while (request.moveToNext())
         }
         else
-            Log.d(LOG_TAG, "0 rows")
         request.close()
         return classesContent
     }
@@ -389,7 +334,6 @@ class DBHelper(context: Context)
             while (request.moveToNext())
         }
         else
-            Log.d(LOG_TAG, "0 rows")
         request.close()
         return termContent
     }
@@ -420,7 +364,6 @@ class DBHelper(context: Context)
                 while (request.moveToNext())
         }
         else
-            Log.d(LOG_TAG, "0 rows")
         request.close()
         return subjectsContent
     }
@@ -452,7 +395,6 @@ class DBHelper(context: Context)
             while (request.moveToNext())
         }
         else
-            Log.d(LOG_TAG, "0 rows")
         request.close()
         return scheduleContent
     }
@@ -479,13 +421,8 @@ class DBHelper(context: Context)
             while (request.moveToNext())
         }
         else
-            Log.d(LOG_TAG, "0 rows")
         request.close()
         return teachersContent
-    }
-
-    fun getSubTeach()
-    {
     }
 
     //UPDATE//////////////////////////////////////////////////////////////////////////////////////////////
@@ -498,10 +435,6 @@ class DBHelper(context: Context)
         teacher_id: Int?
     )
     {
-        Log.d(LOG_TAG, "--- updateClasses ---")
-
-        //TODO null processing for arguments in update classes
-
         val record = ContentValues()
         with(record)
         {
@@ -517,15 +450,10 @@ class DBHelper(context: Context)
         }
 
         writableDatabase.update("classes", record, "id = $id", null)
-        Log.d(LOG_TAG, "updated Classes")
     }
 
     fun updateTerm(id: Int, name: String?, start_date: Date?, end_date: Date?)
     {
-        Log.d(LOG_TAG, "--- updateTerm ---")
-
-        //TODO null processing for arguments in update term
-
         val record = ContentValues()
         with(record)
         {
@@ -535,15 +463,10 @@ class DBHelper(context: Context)
         }
 
         writableDatabase.update("term", record, "id = $id", null)
-        Log.d(LOG_TAG, "updated term")
     }
 
     fun updateSubjects(id: Int, name: String, color: Int?, term_id: Int)
     {
-        Log.d(LOG_TAG, "--- updateSubjects ---")
-
-        //TODO null processing for arguments in update subjects
-
         val record = ContentValues()
         with(record)
         {
@@ -553,12 +476,10 @@ class DBHelper(context: Context)
         }
 
         writableDatabase.update("subjects", record, "id = $id", null)
-        Log.d(LOG_TAG, "updated subjects")
     }
 
     fun updateSchedule(id: Int, position: Int, start_time: Date, end_time: Date)
     {
-        Log.d(LOG_TAG, "--- updateSchedule ---")
         val record = ContentValues()
         with(record)
         {
@@ -568,12 +489,10 @@ class DBHelper(context: Context)
         }
 
         writableDatabase.update("schedule", record, "id = $id", null)
-        Log.d(LOG_TAG, "updated schedule")
     }
 
     fun updateTeachers(id: Int, name: String)
     {
-        Log.d(LOG_TAG, "--- updateTeachers ---")
         val record = ContentValues()
         with(record)
         {
@@ -581,11 +500,6 @@ class DBHelper(context: Context)
         }
 
         writableDatabase.update("teachers", record, "id = $id", null)
-        Log.d(LOG_TAG, "updated teachers")
-    }
-
-    fun updateSubTeach()
-    {
     }
 
     //GETTERS by ID////////////////////////////////////////////////////////////////////////////////////////////
@@ -593,81 +507,25 @@ class DBHelper(context: Context)
     fun deleteClassesByID(id: Int)
     {
         val deleted =  writableDatabase.delete("classes", "id = $id", null)
-        Log.d(LOG_TAG, "rows deleted from classes by deleteClassesByID(id: Int): $deleted")
     }
 
     fun deleteTermByID(id: Int)
     {
         val deleted =  writableDatabase.delete("term", "id = $id", null)
-        Log.d(LOG_TAG, "rows deleted from term by deleteTermByID(id: Int): $deleted")
     }
 
     fun deleteSubjectsById(id: Int)
     {
         val deleted =  writableDatabase.delete("subjects", "id = $id", null)
-        Log.d(LOG_TAG, "rows deleted from term by deleteSubjectsById(id: Int): $deleted")
     }
 
     fun deleteScheduleById(id: Int)
     {
         val deleted =  writableDatabase.delete("schedule", "id = $id", null)
-        Log.d(LOG_TAG, "rows deleted from term by deleteScheduleById(id: Int): $deleted")
     }
 
     fun deleteTeachersById(id: Int)
     {
         val deleted =  writableDatabase.delete("teachers", "id = $id", null)
-        Log.d(LOG_TAG, "rows deleted from term by deleteTeachersById(id: Int): $deleted")
     }
-
-    fun deleteSubTeachByID(id: Int)
-    {
-    }
-
-    //DELETE////////////////////////////////////////////////////////////////////////////////////////////
-    fun deleteClasses()
-    {
-        Log.d(LOG_TAG, "--- deleteClasses ---")
-
-        val deleted =  writableDatabase.delete("classes", null, null)
-        Log.d(LOG_TAG, "rows deleted from term by deleteClasses(): $deleted")
-    }
-
-    fun deleteTerm()
-    {
-        Log.d(LOG_TAG, "--- deleteTerm ---")
-
-        val deleted =  writableDatabase.delete("term", null, null)
-        Log.d(LOG_TAG, "rows deleted from term by deleteTerm(): $deleted")
-    }
-
-    fun deleteSubjects()
-    {
-        Log.d(LOG_TAG, "--- deleteSubjects ---")
-
-        val deleted =  writableDatabase.delete("subjects", null, null)
-        Log.d(LOG_TAG, "rows deleted from term by deleteSubjects(): $deleted")
-    }
-
-    fun deleteSchedule()
-    {
-        Log.d(LOG_TAG, "--- deleteSchedule ---")
-
-        val deleted =  writableDatabase.delete("schedule", null, null)
-        Log.d(LOG_TAG, "rows deleted from term by deleteSchedule(): $deleted")
-    }
-
-    fun deleteTeachers()
-    {
-        Log.d(LOG_TAG, "--- deleteTeachers ---")
-
-        val deleted =  writableDatabase.delete("teachers", null, null)
-        Log.d(LOG_TAG, "rows deleted from term by deleteTeachers(): $deleted")
-    }
-
-    fun deleteSubTeach()
-    {
-    }
-
-
 }

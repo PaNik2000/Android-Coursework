@@ -3,14 +3,12 @@ package com.example.androidcoursework
 import android.app.TimePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import java.text.FieldPosition
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,13 +42,13 @@ class AddNewScheduleActivity : AppCompatActivity() {
         mEndDate = findViewById<TextView>(R.id.endScheduleTime)
 
         if(createNewScedule){
-            supportActionBar?.title = "New schedule"
+            supportActionBar?.title = "Новая пара"
             var curDate = Date()
             val dateFormat = SimpleDateFormat("HH:mm")
             mStartDate.text = dateFormat.format(curDate)
             mEndDate.text = dateFormat.format(curDate)
         } else {
-            supportActionBar?.title = "Schedule"
+            supportActionBar?.title = "Пара"
             mStartDate.text = DBHelper(this).getScheduleById(intent.getIntExtra("scheduleID", -1))?.startTime
             mEndDate.text = DBHelper(this).getScheduleById(intent.getIntExtra("scheduleID", -1))?.endTime
         }
@@ -71,14 +69,11 @@ class AddNewScheduleActivity : AppCompatActivity() {
             R.id.add -> {
                 //Проверка на попадание начального времени в уже существующую пару
                 if(!checkStartDate()){
-                    Toast.makeText(this, "Selected start date intersects with existing schedule", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Выранная начальная дата пересекается с существующим расписанием", Toast.LENGTH_SHORT).show()
                 }
                 //Проверка на попадание конечного времени в уже существующую пару
                 else if (!checkEndDate()){
-                    Toast.makeText(this, "Selected end date intersects with existing schedule", Toast.LENGTH_SHORT).show()
-                }
-                else if (!checkDate()){
-                    Toast.makeText(this, "Selected end date is earlier than start date", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Выранная конечная дата пересекается с существующим расписанием", Toast.LENGTH_SHORT).show()
                 }
                 else if(createNewScedule){
                     //Расстановка новых позиций
@@ -87,15 +82,12 @@ class AddNewScheduleActivity : AppCompatActivity() {
                         SimpleDateFormat("HH:mm").parse(mStartDate.text.toString()),
                         SimpleDateFormat("HH:mm").parse(mEndDate.text.toString()))
                     updateAllSchedules(newSchedulePosition, deleteSchedule = false)
-
-                    Toast.makeText(this, "Why we still here?", Toast.LENGTH_SHORT).show()
                     finish()
 
                 } else {
                     //Расстановка новых позиций
                     val newSchedulePosition = getNewPosition()
                     updateAllSchedules(newSchedulePosition, deleteSchedule = false)
-                    Toast.makeText(this, "Why we still here?", Toast.LENGTH_SHORT).show()
                     finish()
                 }
             }
@@ -185,17 +177,10 @@ class AddNewScheduleActivity : AppCompatActivity() {
         return true
     }
 
-    fun checkDate() : Boolean{
-        val timeFormat = SimpleDateFormat("HH:mm")
-        return timeFormat.parse(mStartDate.text.toString()) < timeFormat.parse(mEndDate.text.toString())
-    }
-
     fun getNewPosition() : Int {
         val timeFormat = SimpleDateFormat("HH:mm")
         for(schedule in sortedScheduleList){
             if(timeFormat.parse(mEndDate.text.toString()) < timeFormat.parse(schedule.startTime)){
-                Log.d("ttt", "${timeFormat.parse(mEndDate.text.toString())} ${timeFormat.parse(schedule.startTime)}")
-                Log.d("ttt", "pos: ${schedule.position}")
                 if(createNewScedule)
                     return schedule.position
                 else{

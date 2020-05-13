@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
 
-    val DEFAULT_TITLE = "Planner"
+    val DEFAULT_TITLE = "Планировщик"
 
     private val todayFragment = TodayFragment()
     private val calendarFragment = CalendarFragment()

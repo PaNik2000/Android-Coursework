@@ -24,7 +24,7 @@
         android:layout_height="55dp"
         android:layout_marginTop="40dp"
         android:gravity="bottom"
-        android:hint="Name of the subject"
+        android:hint="Название дисциплины"
         android:inputType="textPersonName"
         android:textSize="24dp"
         app:layout_constraintEnd_toEndOf="parent"

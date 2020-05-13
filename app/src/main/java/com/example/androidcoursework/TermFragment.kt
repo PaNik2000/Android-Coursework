@@ -3,7 +3,6 @@ package com.example.androidcoursework
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,10 +38,8 @@ class TermFragment : Fragment() {
         listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, itemClicked: View, position: Int, id: Long) {
                 val intent = Intent(activity, SubjectsInTermActivity::class.java)
-                //Как-то получаем айдишник текущего term'a, а также его имя и передаем вместе с интентом
                 val termID = termList[position].ID
                 val termName = termList[position].name
-                //Запрос жопы...
                 intent.putExtra("termID", termID)
                 intent.putExtra("termName", termName)
                 startActivity(intent)
@@ -75,8 +72,6 @@ class TermListAdapter(context : Context, val resource: Int, objects: MutableList
 
         (view?.findViewById(R.id.termName) as TextView).text = term?.name
         (view.findViewById(R.id.termDates) as TextView).text = str
-
-        Log.d("abc", count.toString())
 
         return view
     }

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/changeSubject"
-        android:title="Change subject"
+        android:title="Изменить дисциплину"
         android:orderInCategory="100"
         app:showAsAction="never"/>
     <item android:id="@+id/deleteSubject"
-        android:title="Delete subject"
+        android:title="Удалить дисциплину"
         android:orderInCategory="100"
         app:showAsAction="never"/>
 

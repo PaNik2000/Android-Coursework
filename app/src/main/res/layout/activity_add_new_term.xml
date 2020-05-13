@@ -10,7 +10,7 @@
         android:id="@+id/termName"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:hint="Name of the term"
+        android:hint="Название семестра"
         android:inputType="textPersonName"
         android:gravity="bottom"
         android:textSize="24dp"
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Starts"
+        android:text="Начало"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/termName" />
@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Ends"
+        android:text="Конец"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/startDate" />

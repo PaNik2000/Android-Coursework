@@ -33,7 +33,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Classes"
+        android:text="Занятия"
         android:textSize="22dp"
         android:gravity="center_horizontal"
         android:layout_marginTop="70dp"/>
