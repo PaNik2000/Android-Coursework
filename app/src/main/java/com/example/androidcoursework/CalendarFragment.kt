@@ -46,8 +46,21 @@ class CalendarFragment : Fragment() {
                 currentDate.set(year, month, dayOfMonth, 0, 0)
 
                 for (clas in DBList) {
-                    if (SimpleDateFormat("dd.MM.yyyy").parse(clas.endDate).before(currentDate.time)) {
+
+                    val calEndDate = Calendar.getInstance()
+                    calEndDate.time = SimpleDateFormat("dd.MM.yyyy").parse(clas.endDate)
+                    if (currentDate.get(Calendar.YEAR) > calEndDate.get(Calendar.YEAR)) {
                         continue
+                    }
+                    else if (currentDate.get(Calendar.YEAR) == calEndDate.get(Calendar.YEAR)) {
+                        if (currentDate.get(Calendar.MONTH) > calEndDate.get(Calendar.MONTH)) {
+                            continue
+                        }
+                        else if (currentDate.get(Calendar.MONTH) == calEndDate.get(Calendar.MONTH)) {
+                            if (currentDate.get(Calendar.DAY_OF_MONTH) > calEndDate.get(Calendar.DAY_OF_MONTH)) {
+                                continue
+                            }
+                        }
                     }
 
                     val firstClass = Calendar.getInstance()

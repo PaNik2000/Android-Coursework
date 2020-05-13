@@ -2,6 +2,7 @@ package com.example.androidcoursework
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,8 +36,20 @@ class DayFragment(val date : Calendar) : Fragment() {
         DBList.addAll(dbHelper.getClasses())
         for (clas in DBList) {
 
-            if (SimpleDateFormat("dd.MM.yyyy").parse(clas.endDate).before(date.time)) {
+            val calEndDate = Calendar.getInstance()
+            calEndDate.time = SimpleDateFormat("dd.MM.yyyy").parse(clas.endDate)
+            if (date.get(Calendar.YEAR) > calEndDate.get(Calendar.YEAR)) {
                 continue
+            }
+            else if (date.get(Calendar.YEAR) == calEndDate.get(Calendar.YEAR)) {
+                if (date.get(Calendar.MONTH) > calEndDate.get(Calendar.MONTH)) {
+                    continue
+                }
+                else if (date.get(Calendar.MONTH) == calEndDate.get(Calendar.MONTH)) {
+                    if (date.get(Calendar.DAY_OF_MONTH) > calEndDate.get(Calendar.DAY_OF_MONTH)) {
+                        continue
+                    }
+                }
             }
 
             val firstClass = Calendar.getInstance()
@@ -91,7 +104,7 @@ class DayFragment(val date : Calendar) : Fragment() {
                         break
                     }
                     if (firstClass.after(date)) break
-                    firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq.toInt())
+                    firstClass.add(Calendar.DAY_OF_MONTH, clas.repeatFreq)
                 }
             }
         }
