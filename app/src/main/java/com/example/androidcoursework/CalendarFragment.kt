@@ -220,10 +220,10 @@ class CalendarListAdapter(context : Context, val resource: Int, objects: Mutable
             view = LayoutInflater.from(context).inflate(resource, null)
         }
 
-        (view?.findViewById(R.id.calendarListPosition) as TextView).text = schedule?.position.toString()
-        (view.findViewById(R.id.calendarListColor) as View).background = getDrawable(context, colorResources[idsOfColors.indexOf(subject?.color)])
+        if (schedule != null) (view?.findViewById(R.id.calendarListPosition) as TextView).text = schedule.position.toString()
+        (view?.findViewById(R.id.calendarListColor) as View).background = getDrawable(context, colorResources[idsOfColors.indexOf(subject?.color)])
         (view.findViewById(R.id.calendarListSubjType) as TextView).text = subjTypeStr
-        (view.findViewById(R.id.calendarListTeacher) as TextView).text = teacher?.name
+        if (teacher != null) (view.findViewById(R.id.calendarListTeacher) as TextView).text = teacher?.name
 
         return view
     }
