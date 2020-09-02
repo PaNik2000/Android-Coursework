@@ -29,6 +29,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addClassToolBar" />
 
+    <TextView
+        android:id="@+id/auditoryText"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:gravity="center_vertical"
+        android:text="Аудитория: "
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typeClassText" />
+
+    <EditText
+        android:id="@+id/typeAuditoryText"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:hint="A-19"
+        android:textSize="25dp"
+        app:layout_constraintStart_toEndOf="@+id/auditoryText"
+        app:layout_constraintTop_toBottomOf="@+id/editTypeClass" />
+
     <EditText
         android:id="@+id/editTypeClass"
         android:layout_width="200dp"
@@ -49,17 +69,17 @@
         android:text="Номер пары:"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTypeClass" />
+        app:layout_constraintTop_toBottomOf="@+id/auditoryText" />
 
     <Spinner
         android:id="@+id/editPositionClass"
-        android:layout_width="204dp"
+        android:layout_width="154dp"
         android:layout_height="35dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:spinnerMode="dialog"
         app:layout_constraintStart_toEndOf="@+id/positionClassText"
-        app:layout_constraintTop_toBottomOf="@+id/editTypeClass" />
+        app:layout_constraintTop_toBottomOf="@+id/typeAuditoryText" />
 
     <TextView
         android:id="@+id/startText"

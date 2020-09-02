@@ -8,7 +8,7 @@ class Schedule(val ID: Int?, val position: Int, val startTime: String, val endTi
 
 class Teacher(val ID: Int?, val name: String)
 
-class MyClass(val ID: Int?, val subjectID: Int, val scheduleID: Int, val teacherID: Int, val type: String, val startDate : String, val endDate : String, val weekDay: Int, val repeatType: Int, val repeatFreq: Int)
+class MyClass(val ID: Int?, val subjectID: Int, val scheduleID: Int, val teacherID: Int, val type: String, val startDate : String, val endDate : String, val weekDay: Int, val repeatType: Int, val repeatFreq: Int, val aud: String)
 
 enum class RepeatTypes (val TYPE: Int){
     DAY(0),

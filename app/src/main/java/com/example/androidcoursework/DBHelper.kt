@@ -2,6 +2,7 @@ package com.example.androidcoursework
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.text.SimpleDateFormat
@@ -9,7 +10,9 @@ import java.util.*
 
 
 class DBHelper(context: Context)
-    : SQLiteOpenHelper(context, "courseWorkDB", null, 1) {
+    : SQLiteOpenHelper(context, "courseWorkDB", null, DATABASE_VERSION) {
+
+    companion object{ val DATABASE_VERSION = 2}
 
     override fun onOpen(db: SQLiteDatabase) {
         super.onOpen(db)
@@ -62,6 +65,7 @@ class DBHelper(context: Context)
                 + "repeat_type int,"
                 + "repeat_freq int,"
                 + "teacher_id int,"
+                + "aud text,"
 
                 + "foreign key(subject_id) references subjects(id) on delete cascade,"
                 + "foreign key(position) references schedule(id) on delete set null,"
@@ -71,14 +75,93 @@ class DBHelper(context: Context)
 
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion:Int, newVersion:Int) {}
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion:Int, newVersion:Int) {
+        if(oldVersion < 2 && newVersion == 2){
+            db.execSQL("ALTER TABLE classes RENAME TO classes_old")
+            db.execSQL("create table classes ("
+                    + "id integer primary key autoincrement,"
+                    + "subject_id int,"
+                    + "type text,"
+                    + "position int,"
+                    + "start_date date,"
+                    + "end_date date,"
+                    + "week_day int,"
+                    + "repeat_type int,"
+                    + "repeat_freq int,"
+                    + "teacher_id int,"
+                    + "aud text,"
+
+                    + "foreign key(subject_id) references subjects(id) on delete cascade,"
+                    + "foreign key(position) references schedule(id) on delete set null,"
+                    + "foreign key(teacher_id) references teachers(id) on delete set null"
+
+                    + ");")
+
+            val COLUMS = arrayOf<String>("id, subject_id, type, position, start_date, end_date, week_day, repeat_type, repeat_freq, teacher_id")
+
+            val cursor : Cursor = db.query(
+                "classes_old",
+                COLUMS,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+
+            try{
+                val idColumIndex : Int = cursor.getColumnIndex("id")
+                val subject_idColumIndex : Int = cursor.getColumnIndex("subject_id")
+                val typeColumIndex : Int = cursor.getColumnIndex("type")
+                val positionColumIndex : Int = cursor.getColumnIndex("position")
+                val start_dateColumIndex : Int = cursor.getColumnIndex("start_date")
+                val end_dateColumIndex : Int = cursor.getColumnIndex("end_date")
+                val week_dayColumIndex : Int = cursor.getColumnIndex("week_day")
+                val repeat_typeColumIndex : Int = cursor.getColumnIndex("repeat_type")
+                val repeat_freqColumIndex : Int = cursor.getColumnIndex("repeat_freq")
+                val teacher_idColumIndex : Int = cursor.getColumnIndex("teacher_id")
+
+                while(cursor.moveToNext()){
+                    val oldId = cursor.getInt(idColumIndex)
+                    val oldSubject_id = cursor.getInt(subject_idColumIndex)
+                    val oldType = cursor.getString(typeColumIndex)
+                    val oldPosition = cursor.getInt(positionColumIndex)
+                    val oldStartDate = cursor.getString(start_dateColumIndex)
+                    val oldEndDate = cursor.getString(end_dateColumIndex)
+                    val oldWeekDay = cursor.getInt(week_dayColumIndex)
+                    val oldRepeatType = cursor.getInt(repeat_typeColumIndex)
+                    val oldRepeatFreq = cursor.getInt(repeat_freqColumIndex)
+                    val oldTeacherId = cursor.getInt(teacher_idColumIndex)
+
+                    val cv = ContentValues()
+
+                    cv.put("id", oldId)
+                    cv.put("subject_id", oldSubject_id)
+                    cv.put("type", oldType)
+                    cv.put("position", oldPosition)
+                    cv.put("start_date", oldStartDate)
+                    cv.put("end_date", oldEndDate)
+                    cv.put("week_day", oldWeekDay)
+                    cv.put("repeat_type", oldRepeatType)
+                    cv.put("repeat_freq", oldRepeatFreq)
+                    cv.put("teacher_id", oldTeacherId)
+                    cv.put("aud", "???")
+                    db.insert("classes", null, cv)
+                }
+            }
+            finally {
+                cursor.close()
+                db.execSQL("DROP TABLE classes_old")
+            }
+        }
+    }
 
     //INSERTS////////////////////////////////////////////////////////////////////////////////////////////
     fun insertClasses(
         subject_id: Int, type: String, position: Int?,
         start_date: Date?, end_date: Date?,
         week_day: Int?, repeat_type: Int?, repeat_freq: Int?,
-        teacher_id: Int?
+        teacher_id: Int?, aud: String?
     )
     {
         val record = ContentValues()
@@ -93,6 +176,7 @@ class DBHelper(context: Context)
             put("repeat_type", repeat_type)
             put("repeat_freq", repeat_freq)
             put("teacher_id", teacher_id)
+            put("aud", aud)
         }
 
         writableDatabase.insert("classes", null, record)
@@ -165,6 +249,7 @@ class DBHelper(context: Context)
             val rTypeColIdx =   request.getColumnIndex("repeat_type")
             val rFreqColIdx =   request.getColumnIndex("repeat_freq")
             val tIdColIdx   =   request.getColumnIndex("teacher_id")
+            val audColIdx = request.getColumnIndex("aud")
             return MyClass(
                 request.getInt(idColIdx),
                 request.getInt(subIdColIdx),
@@ -175,7 +260,8 @@ class DBHelper(context: Context)
                 request.getString(eDatColIdx),
                 request.getInt(wDayColIdx),
                 request.getInt(rTypeColIdx),
-                request.getInt(rFreqColIdx)
+                request.getInt(rFreqColIdx),
+                request.getString(audColIdx)
                 )
         }
         return null
@@ -284,6 +370,7 @@ class DBHelper(context: Context)
             val rTypeColIdx =   request.getColumnIndex("repeat_type")
             val rFreqColIdx =   request.getColumnIndex("repeat_freq")
             val tIdColIdx   =   request.getColumnIndex("teacher_id")
+            val audColIdx = request.getColumnIndex("aud")
 
             do
             {
@@ -298,7 +385,8 @@ class DBHelper(context: Context)
                     request.getString(eDatColIdx),
                     request.getInt(wDayColIdx),
                     request.getInt(rTypeColIdx),
-                    request.getInt(rFreqColIdx)
+                    request.getInt(rFreqColIdx),
+                    request.getString(audColIdx)
                     )
                 )
             }
@@ -432,7 +520,7 @@ class DBHelper(context: Context)
         subject_id: Int, type: String, position: Int?,
         start_date: Date, end_date: Date, week_day: Int,
         repeat_type: Int, repeat_freq: Int,
-        teacher_id: Int?
+        teacher_id: Int?, aud: String?
     )
     {
         val record = ContentValues()
@@ -447,6 +535,7 @@ class DBHelper(context: Context)
             put("repeat_type", repeat_type)
             put("repeat_freq", repeat_freq)
             put("teacher_id", teacher_id)
+            put("aud", aud)
         }
 
         writableDatabase.update("classes", record, "id = $id", null)

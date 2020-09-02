@@ -214,7 +214,8 @@ class CalendarListAdapter(context : Context, val resource: Int, objects: Mutable
         val schedule = dbHelper.getScheduleById(clas.scheduleID)
         val teacher = dbHelper.getTeachersById(clas.teacherID)
 
-        val subjTypeStr = "${subject?.name} ${clas.type}"
+        val subjName = subject?.name
+        val typeAud = "${clas.type} ${clas.aud}"
 
         if (view == null) {
             view = LayoutInflater.from(context).inflate(resource, null)
@@ -222,7 +223,8 @@ class CalendarListAdapter(context : Context, val resource: Int, objects: Mutable
 
         (view?.findViewById(R.id.calendarListPosition) as TextView).text = schedule?.position.toString()
         (view.findViewById(R.id.calendarListColor) as View).background = getDrawable(context, colorResources[idsOfColors.indexOf(subject?.color)])
-        (view.findViewById(R.id.calendarListSubjType) as TextView).text = subjTypeStr
+        (view.findViewById(R.id.subjName) as TextView).text = subjName
+        (view.findViewById(R.id.typeAndAud) as TextView).text = typeAud
         (view.findViewById(R.id.calendarListTeacher) as TextView).text = teacher?.name
 
         return view

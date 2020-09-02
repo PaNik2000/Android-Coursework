@@ -24,6 +24,7 @@ class AddNewClassActivity : AppCompatActivity() {
     lateinit var teacherNames: ArrayList<String>
 
     lateinit var typeClass: EditText
+    lateinit var typeAud: EditText
     lateinit var mStartDate : TextView
     lateinit var mEndDate : TextView
     lateinit var scheduleSpinner: Spinner
@@ -46,6 +47,7 @@ class AddNewClassActivity : AppCompatActivity() {
         mStartDate = findViewById<TextView>(R.id.editStart)
         mEndDate = findViewById<TextView>(R.id.editEnd)
         typeClass = findViewById<EditText>(R.id.editTypeClass)
+        typeAud = findViewById<EditText>(R.id.typeAuditoryText)
         scheduleSpinner = findViewById<Spinner>(R.id.editPositionClass)
         frequencySpinner = findViewById<Spinner>(R.id.editFreqType)
         repeatSpinner = findViewById<Spinner>(R.id.editRepeatType)
@@ -104,6 +106,7 @@ class AddNewClassActivity : AppCompatActivity() {
         } else {
             supportActionBar?.title = dbHelper.getSubjectsById(intent.getIntExtra("subjectID", -1))?.name
             typeClass.setText(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))?.type, TextView.BufferType.EDITABLE)
+            typeAud.setText(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))?.aud, TextView.BufferType.EDITABLE)
             scheduleSpinner.setSelection(schedulePositions.indexOf("${dbHelper.getScheduleById(dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.scheduleID)?.position} пара"))
             mStartDate.text = dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.startDate
             mEndDate.text = dbHelper.getClassesByID(intent.getIntExtra("classID", -1))!!.endDate
@@ -160,10 +163,10 @@ class AddNewClassActivity : AppCompatActivity() {
                 }
 
                 if(createNewClass) {
-                    if (typeClass.text.isEmpty()) {
+                    if (typeClass.text.isEmpty() || typeAud.text.isEmpty()) {
                         Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_SHORT).show()
                     } else if (weekDay == 0 && weekSelected) {
-                        Toast.makeText(this, "Выберете номер пары!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Выберете день недели!", Toast.LENGTH_SHORT).show()
                     } else {
                         DBHelper(this).insertClasses(intent.getIntExtra("subjectID", -1),
                             typeClass.text.toString(),
@@ -173,14 +176,15 @@ class AddNewClassActivity : AppCompatActivity() {
                             weekDay,
                             if ((repeatSpinner.selectedItemPosition == 0)) RepeatTypes.DAY.TYPE else RepeatTypes.WEEK.TYPE,
                             frequencySpinner.selectedItemPosition + 1,
-                            if(!teachers.isEmpty()) teachers.elementAt(teacherSpinner.selectedItemPosition).ID else null)
+                            if(!teachers.isEmpty()) teachers.elementAt(teacherSpinner.selectedItemPosition).ID else null,
+                            typeAud.text.toString())
                         finish()
                     }
                 } else {
-                    if(typeClass.text.isEmpty())
+                    if(typeClass.text.isEmpty() || typeAud.text.isEmpty())
                         Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show()
                     if(weekDay == 0 && weekSelected){
-                        Toast.makeText(this, "CВыберете номер пары!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Выберете день недели!", Toast.LENGTH_SHORT).show()
                     } else {
                         DBHelper(this).updateClasses(
                             intent.getIntExtra("classID", -1),
@@ -192,8 +196,8 @@ class AddNewClassActivity : AppCompatActivity() {
                             weekDay,
                             if ((repeatSpinner.selectedItemPosition == 0)) RepeatTypes.DAY.TYPE else RepeatTypes.WEEK.TYPE,
                             frequencySpinner.selectedItemPosition + 1,
-                            if(!teachers.isEmpty()) teachers.elementAt(teacherSpinner.selectedItemPosition).ID else null
-                        )
+                            if(!teachers.isEmpty()) teachers.elementAt(teacherSpinner.selectedItemPosition).ID else null,
+                            typeAud.text.toString())
                         finish()
                     }
                 }
