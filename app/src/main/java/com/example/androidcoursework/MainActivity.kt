@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
 
-    val DEFAULT_TITLE = "Планировщик"
-
     private val todayFragment = TodayFragment()
     private val calendarFragment = CalendarFragment()
     private val plannerFragment = PlannerFragment()
@@ -26,13 +24,13 @@ class MainActivity : AppCompatActivity() {
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when (item.getItemId()) {
                     R.id.navigation_today -> {
-                        plannerFragment.removeFragments()
+                        if (plannerFragment.isAdded) plannerFragment.removeFragments()
                         supportActionBar?.title = getString(R.string.title_today)
                         loadFragment(todayFragment)
                         return true
                     }
                     R.id.navigation_calendar -> {
-                        plannerFragment.removeFragments()
+                        if (plannerFragment.isAdded) plannerFragment.removeFragments()
                         if (todayFragment.isAdded) todayFragment.removeFragments()
                         supportActionBar?.title = getString(R.string.title_calendar)
                         loadFragment(calendarFragment)
@@ -59,13 +57,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val dbHelper = DBHelper(this)
         val navigation : BottomNavigationView = findViewById(R.id.navigation)
         navigation.setOnNavigationItemSelectedListener(mNavigationListener)
-        navigation.selectedItemId = R.id.navigation_planner
-
         toolBar = findViewById(R.id.mainToolBar)
         setSupportActionBar(toolBar)
-        supportActionBar?.title = DEFAULT_TITLE
+        if (dbHelper.getClasses().isEmpty()) {
+            navigation.selectedItemId = R.id.navigation_planner
+            supportActionBar?.title = "Планировщик"
+        }
+        else {
+            navigation.selectedItemId = R.id.navigation_today
+            supportActionBar?.title = "Сегодня"
+        }
     }
 
     fun onAddTermButtonClick(view: View){
