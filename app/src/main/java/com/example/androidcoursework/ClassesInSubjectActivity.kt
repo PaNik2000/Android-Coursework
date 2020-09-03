@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -71,14 +72,18 @@ class ClassListAdapter(context : Context, val resource: Int, objects: MutableLis
         val teacherName = DBHelper(context).getTeachersById(mClass!!.teacherID)?.name!!
         val firstName = teacherName.substringBefore(" ")
         val name = teacherName.substringAfter(" ").substringBefore(" ").substring(0, 1) + "."
-        val secondName = teacherName.substringAfterLast(" ").substring(0, 1) + "."
+        val secondName = if(teacherName.substringAfter(" ").substringBefore(" ").length == 4)
+            teacherName.substringAfter(" ").substringBefore(" ").substringAfter(".")
+            else teacherName.substringAfterLast(" ").substring(0, 1) + "."
         (view?.findViewById(R.id.classColor) as View).background = getDrawable(context, colorResources[idsOfColors.indexOf(subject.color)])
-        (view.findViewById(R.id.classType) as TextView).text = mClass?.type
+        (view.findViewById(R.id.classType) as TextView).text = mClass.type
         (view.findViewById(R.id.teacherID) as TextView).text = "$firstName $name$secondName"
-        (view.findViewById(R.id.positionID) as TextView).text = if(DBHelper(context).getScheduleById(mClass.scheduleID)?.position != null) "${DBHelper(context).getScheduleById(mClass.scheduleID)?.position} пара" else ""
+        (view.findViewById(R.id.positionID) as TextView).text = if(DBHelper(context).getScheduleById(mClass.scheduleID)?.position != null)
+            "${DBHelper(context).getScheduleById(mClass.scheduleID)?.position} пара"
+            else ""
         (view.findViewById(R.id.weekDay) as TextView).text = weekDayStr
-        (view.findViewById(R.id.auditory) as TextView).text = mClass?.aud
-
+        (view.findViewById(R.id.auditory) as TextView).text = mClass.aud
+        Log.d("name", "$name - $secondName")
         return view
     }
 }
