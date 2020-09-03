@@ -110,7 +110,7 @@ class AddNewScheduleActivity : AppCompatActivity() {
         val curHour = cal.get(Calendar.HOUR_OF_DAY)
         val curMin = cal.get(Calendar.MINUTE)
         val mTimeDialog= TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { view, hour, minute ->
-            if(9 < minute)
+            if(9 <= minute)
                 mStartDate.text = "$hour:${minute}"
             else{
                 mStartDate.text = "$hour:0${minute}"
@@ -130,7 +130,7 @@ class AddNewScheduleActivity : AppCompatActivity() {
         val curHour = cal.get(Calendar.HOUR_OF_DAY)
         val curMin = cal.get(Calendar.MINUTE)
         val mTimeDialog= TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { view, hour, minute ->
-            if(9 < minute)
+            if(9 <= minute)
                 mEndDate.text = "$hour:${minute}"
             else{
                 mEndDate.text = "$hour:0${minute}"

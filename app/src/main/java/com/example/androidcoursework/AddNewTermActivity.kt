@@ -97,8 +97,8 @@ class AddNewTermActivity : AppCompatActivity() {
         val curDayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
         val mDateDialog= DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             // Display Selected date in startDate
-            val day = if(9 > dayOfMonth) "0${dayOfMonth}" else "${dayOfMonth}"
-            val month = if(9 > (monthOfYear+1)) "0${monthOfYear + 1}" else "${monthOfYear+1}"
+            val day = if(9 >= dayOfMonth) "0${dayOfMonth}" else "${dayOfMonth}"
+            val month = if(9 >= (monthOfYear+1)) "0${monthOfYear + 1}" else "${monthOfYear+1}"
             mStartDate.text = "$day.${month}.$year"
             cal.set(year, monthOfYear+3, dayOfMonth)
             val endDate: Date = cal.time
@@ -115,8 +115,8 @@ class AddNewTermActivity : AppCompatActivity() {
         val curMonth = cal.get(Calendar.MONTH)
         val curDayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
         val mDateDialog= DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            val day = if(9 > dayOfMonth) "0${dayOfMonth}" else "${dayOfMonth}"
-            val month = if(9 > (monthOfYear+1)) "0${monthOfYear + 1}" else "${monthOfYear+1}"
+            val day = if(9 >= dayOfMonth) "0${dayOfMonth}" else "${dayOfMonth}"
+            val month = if(9 >= (monthOfYear+1)) "0${monthOfYear + 1}" else "${monthOfYear+1}"
             mEndDate.text = "$day.${month}.$year"
         }, curYear, curMonth, curDayOfMonth)
         mDateDialog.datePicker.minDate = SimpleDateFormat("dd.MM.yyyy").parse(mStartDate.text.toString()).time

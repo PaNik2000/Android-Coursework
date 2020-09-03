@@ -100,13 +100,23 @@ class TodayPagerAdapter(val fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getPageTitle(position: Int): CharSequence? {
         val date = Calendar.getInstance()
+        val currentDate = Calendar.getInstance()
+        var pageTitle : String
         date.set(BEGIN_YEAR, BEGIN_MONTH, BEGIN_DAY)
 
         date.add(Calendar.DAY_OF_MONTH, position)
 
-        return date.get(Calendar.DAY_OF_MONTH).toString() +
-                "." + (date.get(Calendar.MONTH) + 1).toString() +
-                "." + date.get(Calendar.YEAR).toString()
+        val pageTitleDay : String = if(date.get(Calendar.DAY_OF_MONTH) <= 9) "0${date.get(Calendar.DAY_OF_MONTH)}" else "${date.get(Calendar.DAY_OF_MONTH)}"
+        val pageTitleMonth : String = if(date.get(Calendar.MONTH) + 1 <= 9) "0${date.get(Calendar.MONTH) + 1}" else "${date.get(Calendar.MONTH) + 1}"
+        val pageTitleYear : String = date.get(Calendar.YEAR).toString()
+
+        if(date.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH) &&
+            date.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH) &&
+            date.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR))
+            pageTitle = "Сегодня $pageTitleDay.$pageTitleMonth.$pageTitleYear"
+        else pageTitle = "$pageTitleDay.$pageTitleMonth.$pageTitleYear"
+
+        return pageTitle
     }
 
     fun removeFragments() {
